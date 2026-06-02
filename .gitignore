@@ -1,4 +1,4 @@
-# Dependências
+# Dependencias
 node_modules/
 .pnp
 .pnp.js
@@ -7,10 +7,14 @@ node_modules/
 dist/
 build/
 .angular/
+coverage/
 
-# Variáveis de ambiente (nunca commitar)
+# Variaveis de ambiente
 .env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .env.*.local
 !.env.example
 
@@ -24,6 +28,8 @@ yarn-error.log*
 .cache/
 .eslintcache
 *.tsbuildinfo
+tmp/
+temp/
 
 # IDEs
 .vscode/
@@ -43,12 +49,18 @@ desktop.ini
 # NestJS
 /backend/dist/
 /backend/coverage/
+/backend/.nestjs-cache/
 
 # Angular
 /frontend/dist/
 /frontend/.angular/
+/frontend/coverage/
 
 # Uploads e backups locais
 /database/data/
+/database/tmp/
 backup/
 *.sql.bak
+
+# Docker overrides locais
+docker-compose.override.yml

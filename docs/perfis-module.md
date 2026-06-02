@@ -1,13 +1,16 @@
-# Módulo de Perfis e Menu Dinâmico — CRM Comercial 360
+# MÃ³dulo de Perfis e Menu DinÃ¢mico â€” CRM Comercial 360
 
-## Visão Geral
+## VisÃ£o Geral
 
-Perfis definem **quais telas** cada usuário pode acessar. O Admin configura as
-permissões pelo CRM — sem alterar código ou reiniciar o servidor.
+Perfis definem **quais telas** cada usuÃ¡rio pode acessar. O Admin configura as
+permissÃµes pelo CRM â€” sem alterar cÃ³digo ou reiniciar o servidor.
 
-Após o login, o array `telas` no JWT alimenta o `po-menu` lateral e os `RouteGuards`
-do Angular. O menu reflete exatamente o que o perfil do usuário permite, sem telas
-extras visíveis ou rotas acessíveis fora do perfil.
+ApÃ³s o login, o array `telas` no JWT alimenta o `po-menu` lateral e os `RouteGuards`
+do Angular. O menu reflete exatamente o que o perfil do usuÃ¡rio permite, sem telas
+extras visÃ­veis ou rotas acessÃ­veis fora do perfil.
+
+Este documento jÃ¡ estÃ¡ alinhado ao escopo funcional da V1 definido no `PRD.md`.
+Por isso, `leads` e `atendimentos` nÃ£o aparecem entre as telas ativas da primeira versÃ£o.
 
 ---
 
@@ -15,100 +18,100 @@ extras visíveis ou rotas acessíveis fora do perfil.
 
 ### Tabela `perfis`
 
-| Coluna | Tipo | Descrição |
+| Coluna | Tipo | DescriÃ§Ã£o |
 |---|---|---|
-| `id` | uuid PK | — |
+| `id` | uuid PK | â€” |
 | `nome` | varchar(100) UNIQUE | Ex: "Vendedor", "Gerente", "Admin" |
-| `descricao` | varchar(255) | Descrição exibida na tela de gestão |
-| `versao` | integer | Incrementa a cada alteração de telas — usado para invalidar JWT |
-| `sistema` | boolean | `true` = perfil criado pelo seed, não pode ser excluído |
-| `ativo` | boolean | — |
-| `criado_em` | timestamp | — |
-| `atualizado_em` | timestamp | — |
+| `descricao` | varchar(255) | DescriÃ§Ã£o exibida na tela de gestÃ£o |
+| `versao` | integer | Incrementa a cada alteraÃ§Ã£o de telas â€” usado para invalidar JWT |
+| `sistema` | boolean | `true` = perfil criado pelo seed, nÃ£o pode ser excluÃ­do |
+| `ativo` | boolean | â€” |
+| `criado_em` | timestamp | â€” |
+| `atualizado_em` | timestamp | â€” |
 
 ### Tabela `telas`
 
-Catálogo de todas as telas/seções navegáveis do sistema. Seeded com todas as telas
-previstas — não é alterada pelo usuário.
+CatÃ¡logo de todas as telas/seÃ§Ãµes navegÃ¡veis do sistema. Seeded com todas as telas
+previstas para a V1 â€” nÃ£o Ã© alterada pelo usuÃ¡rio.
 
-| Coluna | Tipo | Descrição |
+| Coluna | Tipo | DescriÃ§Ã£o |
 |---|---|---|
-| `id` | uuid PK | — |
+| `id` | uuid PK | â€” |
 | `codigo` | varchar(50) UNIQUE | Chave usada no JWT e nos guards (ex: `mcv`) |
 | `nome` | varchar(100) | Nome exibido no menu (ex: "MCV") |
-| `icone` | varchar(100) | Classe do ícone PO-UI (ex: `ph ph-chart-line`) |
+| `icone` | varchar(100) | Classe do Ã­cone PO-UI (ex: `ph ph-chart-line`) |
 | `rota` | varchar(200) | Rota Angular (ex: `/mcv`) |
 | `modulo` | varchar(50) | Agrupador no menu (ex: `comercial`, `cadastros`) |
-| `ordem` | integer | Ordem no menu dentro do módulo |
-| `ativo` | boolean | — |
+| `ordem` | integer | Ordem no menu dentro do mÃ³dulo |
+| `ativo` | boolean | â€” |
 
 ### Tabela `perfil_telas` (N:N)
 
-| Coluna | Tipo | Descrição |
+| Coluna | Tipo | DescriÃ§Ã£o |
 |---|---|---|
-| `perfil_id` | uuid FK | — |
-| `tela_id` | uuid FK | — |
-| PK | `(perfil_id, tela_id)` | — |
+| `perfil_id` | uuid FK | â€” |
+| `tela_id` | uuid FK | â€” |
+| PK | `(perfil_id, tela_id)` | â€” |
 
 ---
 
 ## Telas Previstas (Seed)
 
-| Código | Nome | Ícone | Rota | Módulo | Ordem |
+| CÃ³digo | Nome | Ãcone | Rota | MÃ³dulo | Ordem |
 |---|---|---|---|---|---|
 | `mcv` | MCV | `ph ph-chart-line` | `/mcv` | comercial | 1 |
 | `clientes` | Clientes | `ph ph-users` | `/clientes` | comercial | 2 |
-| `atendimentos` | Atendimentos | `ph ph-headset` | `/atendimentos` | comercial | 3 |
-| `orcamentos` | Orçamentos | `ph ph-file-text` | `/orcamentos` | comercial | 4 |
-| `leads` | Leads | `ph ph-funnel` | `/leads` | comercial | 5 |
-| `metas` | Metas | `ph ph-target` | `/metas` | comercial | 6 |
-| `financeiro` | Financeiro | `ph ph-currency-circle-dollar` | `/financeiro` | comercial | 7 |
-| `usuarios` | Usuários | `ph ph-user-gear` | `/cadastros/usuarios` | cadastros | 1 |
+| `orcamentos` | OrÃ§amentos | `ph ph-file-text` | `/orcamentos` | comercial | 3 |
+| `metas` | Metas | `ph ph-target` | `/metas` | comercial | 4 |
+| `financeiro` | Financeiro | `ph ph-currency-circle-dollar` | `/financeiro` | comercial | 5 |
+| `usuarios` | UsuÃ¡rios | `ph ph-user-gear` | `/cadastros/usuarios` | cadastros | 1 |
 | `perfis` | Perfis | `ph ph-shield-check` | `/cadastros/perfis` | cadastros | 2 |
-| `parametros` | Parâmetros | `ph ph-sliders` | `/cadastros/parametros` | cadastros | 3 |
+| `parametros` | ParÃ¢metros | `ph ph-sliders` | `/cadastros/parametros` | cadastros | 3 |
 | `cad-tipo-atendimento` | Tipo Atendimento | `ph ph-tag` | `/cadastros/tipo-atendimento` | cadastros | 4 |
 | `cad-origem-lead` | Origem Lead | `ph ph-signpost` | `/cadastros/origem-lead` | cadastros | 5 |
 | `cad-cnae` | CNAE | `ph ph-factory` | `/cadastros/cnae` | cadastros | 6 |
 
 ---
 
-## Perfis Padrão (Seed)
+## Perfis PadrÃ£o (Seed)
 
 ### Admin
-Acesso total ao sistema, incluindo gestão de usuários e configurações.
 
-| Telas | — |
+Acesso total ao sistema, incluindo gestÃ£o de usuÃ¡rios e configuraÃ§Ãµes.
+
+| Telas | â€” |
 |---|---|
-| Todas as telas | — |
+| Todas as telas | â€” |
 
 ### Diretor
-Acesso total aos dados comerciais. Não acessa configurações de sistema.
+
+Mantido na documentaÃ§Ã£o tÃ©cnica como perfil futuro, mas fora do escopo da V1.
 
 | Telas |
 |---|
-| mcv, clientes, atendimentos, orcamentos, leads, metas, financeiro |
-| usuarios *(somente leitura via perfil — sem tela de perfis/parâmetros)* |
+| mcv, clientes, orcamentos, metas, financeiro |
+| usuarios *(somente leitura via perfil â€” sem tela de perfis/parÃ¢metros)* |
 
 ### Gerente
 
 | Telas |
 |---|
-| mcv, clientes, atendimentos, orcamentos, leads, metas, financeiro |
+| mcv, clientes, orcamentos, metas, financeiro |
 
 ### Supervisor
 
 | Telas |
 |---|
-| mcv, clientes, atendimentos, orcamentos, leads, metas |
+| mcv, clientes, orcamentos, metas |
 
 ### Vendedor
 
 | Telas |
 |---|
-| mcv, clientes, atendimentos, orcamentos, leads |
+| mcv, clientes, orcamentos |
 
 > O Admin pode adicionar ou remover telas de qualquer perfil, exceto remover telas
-> do próprio perfil Admin.
+> do prÃ³prio perfil Admin.
 
 ---
 
@@ -116,52 +119,52 @@ Acesso total aos dados comerciais. Não acessa configurações de sistema.
 
 ### Perfis
 
-| Método | Rota | Auth | Descrição |
+| MÃ©todo | Rota | Auth | DescriÃ§Ã£o |
 |---|---|---|---|
 | GET | `/api/perfis` | Admin/Diretor | Listar perfis |
 | GET | `/api/perfis/:id` | Admin/Diretor | Detalhe do perfil com telas |
 | POST | `/api/perfis` | Admin | Criar perfil |
-| PATCH | `/api/perfis/:id` | Admin | Atualizar nome/descrição |
-| DELETE | `/api/perfis/:id` | Admin | Excluir (só se não houver usuários vinculados e `sistema = false`) |
+| PATCH | `/api/perfis/:id` | Admin | Atualizar nome/descriÃ§Ã£o |
+| DELETE | `/api/perfis/:id` | Admin | Excluir (sÃ³ se nÃ£o houver usuÃ¡rios vinculados e `sistema = false`) |
 
-### Permissões de Telas por Perfil
+### PermissÃµes de Telas por Perfil
 
-| Método | Rota | Auth | Descrição |
+| MÃ©todo | Rota | Auth | DescriÃ§Ã£o |
 |---|---|---|---|
 | GET | `/api/perfis/:id/telas` | Admin | Listar telas do perfil |
 | PUT | `/api/perfis/:id/telas` | Admin | Substituir conjunto de telas (batch) |
 | POST | `/api/perfis/:id/telas/:telaId` | Admin | Adicionar tela ao perfil |
 | DELETE | `/api/perfis/:id/telas/:telaId` | Admin | Remover tela do perfil |
 
-> Toda alteração em `perfil_telas` incrementa `perfis.versao`, o que invalida os
-> tokens dos usuários daquele perfil na próxima requisição (ver auth-module.md —
-> Invalidação de Token).
+> Toda alteraÃ§Ã£o em `perfil_telas` incrementa `perfis.versao`, o que invalida os
+> tokens dos usuÃ¡rios daquele perfil na prÃ³xima requisiÃ§Ã£o (ver auth-module.md â€”
+> InvalidaÃ§Ã£o de Token).
 
-### Telas (catálogo — somente leitura)
+### Telas (catÃ¡logo â€” somente leitura)
 
-| Método | Rota | Auth | Descrição |
+| MÃ©todo | Rota | Auth | DescriÃ§Ã£o |
 |---|---|---|---|
-| GET | `/api/telas` | Admin | Listar todas as telas disponíveis |
+| GET | `/api/telas` | Admin | Listar todas as telas disponÃ­veis |
 
 ---
 
-## Menu Dinâmico (Angular + PO-UI)
+## Menu DinÃ¢mico (Angular + PO-UI)
 
 ### Estrutura
 
 ```
-po-toolbar   ← header fixo com título, empresa ativa e perfil do usuário
-po-menu      ← menu lateral retrátil com campo de pesquisa (p-filter="true")
-  └── router-outlet  ← conteúdo da tela ativa
+po-toolbar   â† header fixo com tÃ­tulo, empresa ativa e perfil do usuÃ¡rio
+po-menu      â† menu lateral retrÃ¡til com campo de pesquisa (p-filter="true")
+  â””â”€â”€ router-outlet  â† conteÃºdo da tela ativa
 ```
 
-### Construção do Menu
+### ConstruÃ§Ã£o do Menu
 
-1. No login, o backend retorna `telas: string[]` (códigos) no JWT.
-2. O `AppComponent` usa o `MenuService` para transformar esses códigos em
-   `PoMenuItem[]` consultando o catálogo local (seed de telas embutido no frontend).
+1. No login, o backend retorna `telas: string[]` (cÃ³digos) no JWT.
+2. O `AppComponent` usa o `MenuService` para transformar esses cÃ³digos em
+   `PoMenuItem[]` consultando o catÃ¡logo local.
 3. O `po-menu` recebe o array de itens prontos.
-4. Se `telas` mudar (novo login após alteração de perfil), o menu é reconstruído.
+4. Se `telas` mudar (novo login apÃ³s alteraÃ§Ã£o de perfil), o menu Ã© reconstruÃ­do.
 
 ```typescript
 // menu.service.ts
@@ -175,32 +178,31 @@ buildMenu(telas: string[]): PoMenuItem[] {
 
 ### Agrupamento no Menu
 
-Telas do módulo `comercial` aparecem primeiro (sem subgrupo visual).
-Telas do módulo `cadastros` aparecem agrupadas sob "Cadastros" como subitem.
+Telas do mÃ³dulo `comercial` aparecem primeiro.
+Telas do mÃ³dulo `cadastros` aparecem agrupadas sob "Cadastros" como subitem.
 
 ```typescript
 readonly menus: PoMenuItem[] = [
-  // telas comerciais (nível raiz)
-  { label: 'MCV',          icon: 'ph ph-chart-line',   link: '/mcv' },
-  { label: 'Clientes',     icon: 'ph ph-users',         link: '/clientes' },
-  // ...
-  // telas de cadastros (agrupadas)
+  { label: 'MCV',        icon: 'ph ph-chart-line',             link: '/mcv' },
+  { label: 'Clientes',   icon: 'ph ph-users',                  link: '/clientes' },
+  { label: 'OrÃ§amentos', icon: 'ph ph-file-text',              link: '/orcamentos' },
+  { label: 'Metas',      icon: 'ph ph-target',                 link: '/metas' },
+  { label: 'Financeiro', icon: 'ph ph-currency-circle-dollar', link: '/financeiro' },
   {
     label: 'Cadastros',
     icon: 'ph ph-folder-open',
     subItems: [
-      { label: 'Usuários',   icon: 'ph ph-user-gear',    link: '/cadastros/usuarios' },
+      { label: 'UsuÃ¡rios',   icon: 'ph ph-user-gear',    link: '/cadastros/usuarios' },
       { label: 'Perfis',     icon: 'ph ph-shield-check', link: '/cadastros/perfis' },
-      // ...
+      { label: 'ParÃ¢metros', icon: 'ph ph-sliders',      link: '/cadastros/parametros' }
     ]
   }
 ];
 ```
 
-### PO-UI — Configuração do po-menu
+### PO-UI â€” ConfiguraÃ§Ã£o do po-menu
 
 ```html
-<!-- app.html -->
 <po-toolbar
   p-title="CRM Comercial 360"
   [p-profile]="profile">
@@ -214,14 +216,9 @@ readonly menus: PoMenuItem[] = [
 </po-menu>
 ```
 
-- `p-filter="true"` — campo de pesquisa no topo do menu lateral
-- Menu totalmente retrátil (comportamento padrão PO-UI)
-- Ícone ativo destacado com cor do tema RCG (`--background-color-item-selected: #EAF5FB`)
-
 ### Route Guards
 
 ```typescript
-// tela.guard.ts
 canActivate(route: ActivatedRouteSnapshot): boolean {
   const codigoTela = route.data['tela'];
   const { telas } = this.authService.getPayload();
@@ -231,37 +228,29 @@ canActivate(route: ActivatedRouteSnapshot): boolean {
   }
   return true;
 }
-
-// nas rotas:
-{
-  path: 'cadastros/perfis',
-  component: PerfisComponent,
-  canActivate: [TelaGuard],
-  data: { tela: 'perfis' }
-}
 ```
 
 ---
 
 ## Cache (Redis)
 
-| Chave | TTL | Conteúdo |
+| Chave | TTL | ConteÃºdo |
 |---|---|---|
-| `perfil:telas:{perfil_id}` | 5 min | Array de códigos de telas do perfil |
-| `perfil:versao:{perfil_id}` | 5 min | Versão atual do perfil |
+| `perfil:telas:{perfil_id}` | 5 min | Array de cÃ³digos de telas do perfil |
+| `perfil:versao:{perfil_id}` | 5 min | VersÃ£o atual do perfil |
 
-Invalidação: ao salvar `perfil_telas`, deleta `perfil:telas:{id}` e `perfil:versao:{id}`.
+InvalidaÃ§Ã£o: ao salvar `perfil_telas`, deleta `perfil:telas:{id}` e `perfil:versao:{id}`.
 
 ---
 
-## Tela de Gestão de Perfis (Admin)
+## Tela de GestÃ£o de Perfis (Admin)
 
 **Rota:** `/cadastros/perfis`
 
 Layout PO-UI:
+
 - `po-page-default` com breadcrumb
-- Lista de perfis: `po-table` com colunas Nome, Usuários vinculados, Versão, Ativo
-- Detalhe/edição: `po-modal` ou página separada
-  - Lista de **todas as telas** com `po-checkbox` indicando quais o perfil tem acesso
-  - Agrupadas por módulo
-  - Botão "Salvar" → `PUT /api/perfis/:id/telas`
+- Lista de perfis: `po-table` com colunas Nome, UsuÃ¡rios vinculados, VersÃ£o, Ativo
+- Detalhe/ediÃ§Ã£o: `po-modal` ou pÃ¡gina separada
+- Lista de todas as telas com `po-checkbox`, agrupadas por mÃ³dulo
+- BotÃ£o "Salvar" â†’ `PUT /api/perfis/:id/telas`
