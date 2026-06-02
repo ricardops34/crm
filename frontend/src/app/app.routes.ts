@@ -145,6 +145,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/cadastros/noticias/noticias-page').then((m) => m.NoticiasPageComponent),
       },
+      {
+        path: 'cadastros/modulos',
+        canActivate: [telaGuard],
+        data: { tela: 'modulos' },
+        loadComponent: () =>
+          import('./features/cadastros/modulos/modulos-page').then((m) => m.ModulosPageComponent),
+      },
     ],
   },
 

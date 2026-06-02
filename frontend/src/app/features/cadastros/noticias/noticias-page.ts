@@ -26,7 +26,7 @@ interface Noticia {
       p-title="Notícias e Avisos"
       [p-breadcrumb]="{ items: [{ label: 'Cadastros' }, { label: 'Notícias' }] }">
 
-      <po-button p-label="Nova notícia" p-icon="ph ph-plus" p-kind="primary" (p-click)="abrirNovo()"></po-button>
+      <po-button p-label="Nova notícia" p-icon="an an-plus" p-kind="primary" (p-click)="abrirNovo()"></po-button>
 
       <po-table
         [p-columns]="colunas"

@@ -32,7 +32,8 @@
             "styles": [
               "node_modules/@po-ui/style/css/po-theme-default.min.css",
               "src/styles.scss",
-              "src/temas/rcg/rcg-theme-fonts.css"
+              "src/temas/rcg/rcg-theme-fonts.css",
+              "src/temas/allia/allia-theme-fonts.css"
             ]
           },
           "configurations": {

@@ -41,10 +41,10 @@ interface Orcamento {
           <span>Valor: <strong>{{ orc.valorTotal | currency:'BRL' }}</strong></span>
 
           @if (orc.status === 'rascunho') {
-            <po-button p-label="Enviar" p-kind="primary" p-icon="ph ph-paper-plane-right" (p-click)="enviar()"></po-button>
+            <po-button p-label="Enviar" p-kind="primary" p-icon="an an-paper-plane-right" (p-click)="enviar()"></po-button>
           }
-          <po-button p-label="Copiar" p-icon="ph ph-copy" (p-click)="copiar()"></po-button>
-          <po-button p-label="Download PDF" p-icon="ph ph-file-pdf" (p-click)="downloadPdf()"></po-button>
+          <po-button p-label="Copiar" p-icon="an an-copy" (p-click)="copiar()"></po-button>
+          <po-button p-label="Download PDF" p-icon="an an-file-text" (p-click)="downloadPdf()"></po-button>
         </div>
 
         <po-table
@@ -78,7 +78,7 @@ export class OrcamentoFormComponent implements OnInit {
     { property: 'valorTotal', label: 'Total', type: 'currency', format: 'BRL' },
     {
       property: 'semEstoque', label: '', type: 'icon',
-      icons: [{ value: 'true', icon: 'ph ph-warning', color: 'color-08', tooltip: 'Sem estoque' }],
+      icons: [{ value: 'true', icon: 'an an-warning-circle', color: 'color-08', tooltip: 'Sem estoque' }],
     },
   ];
 

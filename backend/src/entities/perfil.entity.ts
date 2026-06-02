@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -9,6 +10,7 @@ import {
 } from 'typeorm';
 import { Tela } from './tela.entity';
 import { Usuario } from './usuario.entity';
+import { Modulo } from './modulo.entity';
 
 @Entity('perfis')
 export class Perfil {
@@ -38,6 +40,14 @@ export class Perfil {
 
   @ManyToMany(() => Tela, (tela) => tela.perfis)
   telas: Tela[];
+
+  @ManyToMany(() => Modulo, (m) => m.perfis)
+  @JoinTable({
+    name: 'perfil_modulos',
+    joinColumn: { name: 'perfil_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'modulo_id', referencedColumnName: 'id' },
+  })
+  modulos: Modulo[];
 
   @OneToMany(() => Usuario, (u) => u.perfil)
   usuarios: Usuario[];

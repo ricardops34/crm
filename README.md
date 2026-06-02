@@ -1,4 +1,4 @@
-# CRM Comercial 360
+# Visão 360
 
 CRM comercial multiempresa para `RCG` e `CBA`, com frontend em `Angular + PO-UI`, backend REST em `NestJS`, banco `PostgreSQL`, cache `Redis` e integração com `Protheus`.
 
@@ -11,9 +11,9 @@ O projeto está em estruturação da V1, com documentação funcional e técnica
 A V1 é focada em operação comercial diária e inclui:
 
 - Home inicial por perfil
-- MCV
+- MCV(Manutenção da Carteira de Vendas)
 - Cliente 360
-- Orçamentos integrados ao Protheus
+- Orçamentos integrados ao Via API
 - Financeiro do cliente
 - Dashboard e metas
 - Cadastros e parametrizações essenciais
@@ -32,7 +32,7 @@ Fora da V1:
 - Cache: Redis
 - Armazenamento S3 compatível: MinIO em desenvolvimento
 - Documentação de API: Swagger / OpenAPI
-- Integração ERP: Protheus
+- Integração ERP: Via API
 
 ## Estrutura do Repositório
 

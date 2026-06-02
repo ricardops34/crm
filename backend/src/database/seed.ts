@@ -12,6 +12,7 @@ import { Usuario } from '../entities/usuario.entity';
 import { UsuarioEmpresa } from '../entities/usuario-empresa.entity';
 import { Parametro } from '../entities/parametro.entity';
 import { Noticia } from '../entities/noticia.entity';
+import { Modulo } from '../entities/modulo.entity';
 
 const ds = new DataSource({
   type: 'postgres',
@@ -20,22 +21,23 @@ const ds = new DataSource({
   username: process.env.DB_USERNAME ?? 'crm_user',
   password: process.env.DB_PASSWORD ?? 'crm_pass',
   database: process.env.DB_DATABASE ?? 'crm_db',
-  entities: [Empresa, Perfil, Tela, Usuario, UsuarioEmpresa, Parametro, Noticia],
+  entities: [Empresa, Perfil, Tela, Usuario, UsuarioEmpresa, Parametro, Noticia, Modulo],
   synchronize: true,
 });
 
 const TELAS = [
-  { codigo: 'home',              nome: 'Home',           icone: 'ph ph-house',                       rota: '/home',                       modulo: 'geral',     ordem: 0 },
-  { codigo: 'mcv',               nome: 'MCV',            icone: 'ph ph-chart-line',                  rota: '/mcv',                        modulo: 'comercial', ordem: 1 },
-  { codigo: 'clientes',          nome: 'Clientes',       icone: 'ph ph-users',                       rota: '/clientes',                   modulo: 'comercial', ordem: 2 },
-  { codigo: 'orcamentos',        nome: 'Orçamentos',     icone: 'ph ph-file-text',                   rota: '/orcamentos',                 modulo: 'comercial', ordem: 3 },
-  { codigo: 'metas',             nome: 'Metas',          icone: 'ph ph-target',                      rota: '/metas',                      modulo: 'comercial', ordem: 4 },
-  { codigo: 'financeiro',        nome: 'Financeiro',     icone: 'ph ph-currency-circle-dollar',      rota: '/financeiro',                 modulo: 'comercial', ordem: 5 },
-  { codigo: 'usuarios',          nome: 'Usuários',       icone: 'ph ph-user-gear',                   rota: '/cadastros/usuarios',         modulo: 'cadastros', ordem: 1 },
-  { codigo: 'perfis',            nome: 'Perfis',         icone: 'ph ph-shield-check',                rota: '/cadastros/perfis',           modulo: 'cadastros', ordem: 2 },
-  { codigo: 'parametros',        nome: 'Parâmetros',     icone: 'ph ph-sliders',                     rota: '/cadastros/parametros',       modulo: 'cadastros', ordem: 3 },
-  { codigo: 'vendedores',        nome: 'Vendedores',     icone: 'ph ph-identification-card',         rota: '/cadastros/vendedores',       modulo: 'cadastros', ordem: 4 },
-  { codigo: 'noticias',          nome: 'Notícias',       icone: 'ph ph-newspaper',                   rota: '/cadastros/noticias',         modulo: 'cadastros', ordem: 5 },
+  { codigo: 'home',              nome: 'Home',           icone: 'an an-house',                       rota: '/home',                       modulo: 'geral',     ordem: 0 },
+  { codigo: 'mcv',               nome: 'MCV',            icone: 'an an-chart-line',                  rota: '/mcv',                        modulo: 'comercial', ordem: 1 },
+  { codigo: 'clientes',          nome: 'Clientes',       icone: 'an an-users',                       rota: '/clientes',                   modulo: 'comercial', ordem: 2 },
+  { codigo: 'orcamentos',        nome: 'Orçamentos',     icone: 'an an-file-text',                   rota: '/orcamentos',                 modulo: 'comercial', ordem: 3 },
+  { codigo: 'metas',             nome: 'Metas',          icone: 'an an-target',                      rota: '/metas',                      modulo: 'comercial', ordem: 4 },
+  { codigo: 'financeiro',        nome: 'Financeiro',     icone: 'an an-currency-circle-dollar',      rota: '/financeiro',                 modulo: 'comercial', ordem: 5 },
+  { codigo: 'usuarios',          nome: 'Usuários',       icone: 'an an-user',                   rota: '/cadastros/usuarios',         modulo: 'cadastros', ordem: 1 },
+  { codigo: 'perfis',            nome: 'Perfis',         icone: 'an an-shield-check',                rota: '/cadastros/perfis',           modulo: 'cadastros', ordem: 2 },
+  { codigo: 'parametros',        nome: 'Parâmetros',     icone: 'an an-sliders-horizontal',                     rota: '/cadastros/parametros',       modulo: 'cadastros', ordem: 3 },
+  { codigo: 'vendedores',        nome: 'Vendedores',     icone: 'an an-identification-card',         rota: '/cadastros/vendedores',       modulo: 'cadastros', ordem: 4 },
+  { codigo: 'noticias',          nome: 'Notícias',       icone: 'an an-newspaper',                   rota: '/cadastros/noticias',         modulo: 'cadastros', ordem: 5 },
+  { codigo: 'modulos',           nome: 'Módulos',        icone: 'an an-grid-four',                rota: '/cadastros/modulos',          modulo: 'configuracoes', ordem: 7 },
 ];
 
 const PERFIS_SEED: Array<{ nome: string; descricao: string; telas: string[] }> = [
@@ -133,6 +135,82 @@ async function seed() {
     await perfilRepo.save(perfil);
   }
   console.log('✓ Perfis');
+
+  // ──── Módulos ────────────────────────────────────────────────────────────
+  const moduloRepo = ds.getRepository(Modulo);
+
+  const MODULOS_DEF = [
+    {
+      nome: 'Vendas',
+      icone: 'an an-storefront',
+      ordem: 1,
+      somenteAdmin: false,
+      telas: ['home', 'mcv', 'clientes', 'orcamentos'],
+      perfis: ['Admin', 'Vendedor', 'Supervisor', 'Gerente', 'Administrativo', 'Financeiro'],
+    },
+    {
+      nome: 'Supervisão',
+      icone: 'an an-binoculars',
+      ordem: 2,
+      somenteAdmin: false,
+      telas: ['metas', 'financeiro'],
+      perfis: ['Admin', 'Supervisor', 'Gerente', 'Administrativo', 'Financeiro'],
+    },
+    {
+      nome: 'Cadastros',
+      icone: 'an an-folder-open',
+      ordem: 3,
+      somenteAdmin: false,
+      telas: ['usuarios', 'vendedores', 'noticias'],
+      perfis: ['Admin', 'Administrativo'],
+    },
+    {
+      nome: 'Configurações',
+      icone: 'an an-gear-six',
+      ordem: 4,
+      somenteAdmin: true,
+      telas: ['perfis', 'parametros', 'modulos'],
+      perfis: ['Admin'],
+    },
+  ];
+
+  for (const md of MODULOS_DEF) {
+    let modulo = await moduloRepo.findOne({
+      where: { nome: md.nome },
+      relations: ['telas', 'perfis'],
+    });
+    if (!modulo) {
+      modulo = moduloRepo.create({ nome: md.nome, icone: md.icone, ordem: md.ordem, somenteAdmin: md.somenteAdmin });
+      modulo = await moduloRepo.save(modulo);
+    } else {
+      modulo.icone = md.icone;
+      modulo.ordem = md.ordem;
+      modulo.somenteAdmin = md.somenteAdmin;
+    }
+
+    // Vincula telas ao módulo (via modulo_id na tela)
+    for (const codigoTela of md.telas) {
+      const tela = telaMap.get(codigoTela);
+      if (tela && tela.moduloId !== modulo.id) {
+        tela.moduloId = modulo.id;
+        await telaRepo.save(tela);
+      }
+    }
+
+    // Recarrega o módulo com telas atualizadas
+    modulo = await moduloRepo.findOne({
+      where: { id: modulo.id },
+      relations: ['telas', 'perfis'],
+    });
+
+    // Vincula perfis ao módulo
+    const perfisVinculados = await Promise.all(
+      md.perfis.map((nome) => perfilRepo.findOne({ where: { nome } })),
+    );
+    modulo!.perfis = perfisVinculados.filter(Boolean) as Perfil[];
+    await moduloRepo.save(modulo!);
+  }
+  console.log('✓ Módulos');
 
   // Usuário Admin
   const usuRepo = ds.getRepository(Usuario);

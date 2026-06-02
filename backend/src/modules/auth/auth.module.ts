@@ -10,6 +10,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { Usuario } from '../../entities/usuario.entity';
 import { Perfil } from '../../entities/perfil.entity';
 import { Parametro } from '../../entities/parametro.entity';
+import { ModulosModule } from '../modulos/modulos.module';
+import { ModulosService } from '../modulos/modulos.service';
 
 @Module({
   imports: [
@@ -22,9 +24,14 @@ import { Parametro } from '../../entities/parametro.entity';
       }),
     }),
     TypeOrmModule.forFeature([Usuario, Perfil, Parametro]),
+    ModulosModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    { provide: 'MODULOS_SERVICE', useExisting: ModulosService },
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -29,7 +29,7 @@ interface Orcamento {
           [p-options]="statusOpcoes"
           style="min-width: 220px">
         </po-select>
-        <po-button p-label="Novo orçamento" p-kind="primary" p-icon="ph ph-plus" (p-click)="novo()"></po-button>
+        <po-button p-label="Novo orçamento" p-kind="primary" p-icon="an an-plus" (p-click)="novo()"></po-button>
       </div>
 
       <po-table

@@ -1,8 +1,8 @@
-# Apresentacao Comercial - CRM Comercial 360
+# Apresentacao Comercial - Visão 360
 
 ## Slide 1 - Capa
 
-**CRM Comercial 360**  
+**Visão 360**  
 Gestao comercial integrada ao Protheus para operacao, relacionamento e crescimento de vendas
 
 Publico-alvo:
@@ -17,7 +17,7 @@ Publico-alvo:
 
 ## Slide 2 - Visao Geral
 
-O CRM Comercial 360 foi concebido para centralizar a operacao comercial em um unico ambiente, com foco em produtividade da equipe, visao completa do cliente e integracao com o ERP Protheus.
+O Visão 360 foi concebido para centralizar a operacao comercial em um unico ambiente, com foco em produtividade da equipe, visao completa do cliente e integracao com o ERP Protheus.
 
 O objetivo e reduzir dispersao operacional, acelerar a tomada de decisao e criar uma rotina comercial mais orientada por carteira, historico, metas e oportunidade.
 
@@ -44,13 +44,13 @@ Principais dores enfrentadas pela operacao comercial:
 - Gestao comercial dependente de consultas manuais no ERP
 - Pouca rastreabilidade sobre a rotina do vendedor
 
-O CRM Comercial 360 organiza essas informacoes em fluxos praticos e orientados ao dia a dia da equipe.
+O Visão 360 organiza essas informacoes em fluxos praticos e orientados ao dia a dia da equipe.
 
 ---
 
 ## Slide 4 - Proposta de Valor
 
-O CRM Comercial 360 entrega:
+O Visão 360 entrega:
 
 - **Mais produtividade**: menos tempo procurando informacao e mais tempo vendendo
 - **Mais controle**: visibilidade sobre carteira, resultados e performance
@@ -241,7 +241,7 @@ Beneficio:
 
 ---
 
-## Slide 14 - Diferenciais do CRM Comercial 360
+## Slide 14 - Diferenciais do Visão 360
 
 - Integrado ao Protheus sem perder foco comercial
 - Multiempresa desde a base do produto
@@ -295,7 +295,7 @@ Expansao de inteligencia e automacao:
 
 ## Slide 16 - Ganhos Esperados
 
-Com a implantacao do CRM Comercial 360, a empresa tende a ganhar:
+Com a implantacao do Visão 360, a empresa tende a ganhar:
 
 - mais disciplina comercial
 - mais visibilidade sobre carteira e resultado
@@ -309,7 +309,7 @@ Com a implantacao do CRM Comercial 360, a empresa tende a ganhar:
 
 ## Slide 17 - Encerramento
 
-**CRM Comercial 360**  
+**Visão 360**  
 Uma plataforma para organizar a operacao comercial, conectar times e transformar dados do Protheus em acao comercial no dia a dia.
 
 Mensagem final:

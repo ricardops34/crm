@@ -1,3 +1,20 @@
+export interface JwtTela {
+  id: string;
+  codigo: string;
+  nome: string;
+  icone: string;
+  rota: string;
+  ordem: number;
+}
+
+export interface JwtModulo {
+  id: string;
+  nome: string;
+  icone: string;
+  ordem: number;
+  telas: JwtTela[];
+}
+
 export interface JwtPayload {
   sub: string;
   email: string;
@@ -6,6 +23,7 @@ export interface JwtPayload {
   perfil_nome: string;
   perfil_versao: number;
   telas: string[];
+  modulos: JwtModulo[];
   empresa_id: number;
   empresas: number[];
   primeiro_acesso: boolean;

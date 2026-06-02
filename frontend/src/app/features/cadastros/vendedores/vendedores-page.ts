@@ -32,7 +32,7 @@ interface UsuarioOpt { label: string; value: string; }
 
       <po-button
         p-label="Novo vendedor"
-        p-icon="ph ph-plus"
+        p-icon="an an-plus"
         p-kind="primary"
         (p-click)="abrirNovo()">
       </po-button>

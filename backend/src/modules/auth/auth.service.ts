@@ -17,6 +17,7 @@ import { Usuario } from '../../entities/usuario.entity';
 import { Perfil } from '../../entities/perfil.entity';
 import { Parametro } from '../../entities/parametro.entity';
 import type { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
+import type { ModulosService } from '../modulos/modulos.service';
 import { LoginDto } from './dto/login.dto';
 import { AlterarSenhaDto } from './dto/alterar-senha.dto';
 import { EsqueciSenhaDto } from './dto/esqueci-senha.dto';
@@ -33,6 +34,7 @@ export class AuthService {
     private parametrosRepo: Repository<Parametro>,
     private jwtService: JwtService,
     @Inject(CACHE_MANAGER) private cache: Cache,
+    @Inject('MODULOS_SERVICE') private modulosService: ModulosService,
   ) {}
 
   async login(dto: LoginDto) {
@@ -139,9 +141,16 @@ export class AuthService {
 
   private async emitirToken(usuario: Usuario, empresaIdOverride?: number) {
     const perfil = usuario.perfil;
-    const telas = (perfil.telas ?? []).map((t) => t.codigo);
     const empresas = (usuario.usuarioEmpresas ?? []).map((ue) => ue.empresaId);
     const empresaId = empresaIdOverride ?? empresas[0] ?? 0;
+
+    // Constrói módulos com telas para o JWT
+    const modulos = await this.modulosService.buildModulosParaJwt(perfil.nome, perfil.id);
+
+    // Telas flat (todas as telas acessíveis via módulos + telas diretas do perfil)
+    const telasDosModulos = modulos.flatMap((m) => m.telas.map((t) => t.codigo));
+    const telasDoPerfilDireto = (perfil.telas ?? []).map((t) => t.codigo);
+    const telas = [...new Set([...telasDosModulos, ...telasDoPerfilDireto])];
 
     // Cache da versão do perfil (TTL 5min)
     await this.cache.set(`perfil:versao:${perfil.id}`, perfil.versao, 300000);
@@ -154,6 +163,7 @@ export class AuthService {
       perfil_nome: perfil.nome,
       perfil_versao: perfil.versao,
       telas,
+      modulos,
       empresa_id: empresaId,
       empresas,
       primeiro_acesso: usuario.primeiroAcesso,

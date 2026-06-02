@@ -16,6 +16,7 @@ import { OrcamentosModule } from './modules/orcamentos/orcamentos.module';
 import { VendedoresModule } from './modules/vendedores/vendedores.module';
 import { NoticiasModule } from './modules/noticias/noticias.module';
 import { HomeModule } from './modules/home/home.module';
+import { ModulosModule } from './modules/modulos/modulos.module';
 
 import { Empresa } from './entities/empresa.entity';
 import { Usuario } from './entities/usuario.entity';
@@ -34,13 +35,14 @@ import { NotaFiscal } from './entities/nota-fiscal.entity';
 import { NotaFiscalItem } from './entities/nota-fiscal-item.entity';
 import { Noticia } from './entities/noticia.entity';
 import { LogEnvioOrcamento } from './entities/log-envio-orcamento.entity';
+import { Modulo } from './entities/modulo.entity';
 
 const ENTITIES = [
   Empresa, Usuario, UsuarioEmpresa, Perfil, Tela, Parametro,
   Cliente, Vendedor, CarteiraCliente,
   Orcamento, OrcamentoItem, Produto,
   TituloFinanceiro, NotaFiscal, NotaFiscalItem,
-  Noticia, LogEnvioOrcamento,
+  Noticia, LogEnvioOrcamento, Modulo,
 ];
 
 @Module({
@@ -88,6 +90,7 @@ const ENTITIES = [
     VendedoresModule,
     NoticiasModule,
     HomeModule,
+    ModulosModule,
   ],
 })
 export class AppModule {}

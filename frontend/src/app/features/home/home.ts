@@ -109,7 +109,7 @@ interface Indicadores {
         @if (avisos().length) {
           <div class="po-col-12 po-mb-3">
             <h3 class="po-mb-2" style="color: var(--color-feedback-warning-dark)">
-              <span class="ph ph-warning-circle po-mr-1"></span> Avisos
+              <span class="an an-warning-circle po-mr-1"></span> Avisos
             </h3>
             @for (n of avisos(); track n.id) {
               <po-container class="po-mb-2" style="border-left: 4px solid var(--color-feedback-warning-dark);">
@@ -123,7 +123,7 @@ interface Indicadores {
         @if (noticiasList().length) {
           <div class="po-col-12">
             <h3 class="po-mb-2" style="color: var(--color-brand-01-dark)">
-              <span class="ph ph-newspaper po-mr-1"></span> Notícias
+              <span class="an an-newspaper po-mr-1"></span> Notícias
             </h3>
             <div class="po-row">
               @for (n of noticiasList(); track n.id) {
@@ -139,7 +139,7 @@ interface Indicadores {
 
         @if (!loading() && !avisos().length && !noticiasList().length) {
           <div class="po-col-12 po-text-center po-mt-4">
-            <span class="ph ph-newspaper" style="font-size: 48px; color: var(--color-neutral-mid-40)"></span>
+            <span class="an an-newspaper" style="font-size: 48px; color: var(--color-neutral-mid-40)"></span>
             <p class="po-text-color-neutral-dark-40">Nenhuma notícia ou aviso no momento.</p>
           </div>
         }
@@ -165,11 +165,11 @@ export class HomeComponent implements OnInit {
   atalhos = computed(() => {
     const telas = this.auth.payload()?.telas ?? [];
     const mapa = [
-      { codigo: 'mcv',        label: 'MCV',        icone: 'ph ph-chart-line',             rota: '/mcv' },
-      { codigo: 'clientes',   label: 'Clientes',   icone: 'ph ph-users',                  rota: '/clientes' },
-      { codigo: 'orcamentos', label: 'Orçamentos', icone: 'ph ph-file-text',              rota: '/orcamentos' },
-      { codigo: 'metas',      label: 'Metas',      icone: 'ph ph-target',                 rota: '/metas' },
-      { codigo: 'financeiro', label: 'Financeiro', icone: 'ph ph-currency-circle-dollar', rota: '/financeiro' },
+      { codigo: 'mcv',        label: 'MCV',        icone: 'an an-chart-line',             rota: '/mcv' },
+      { codigo: 'clientes',   label: 'Clientes',   icone: 'an an-users',                  rota: '/clientes' },
+      { codigo: 'orcamentos', label: 'Orçamentos', icone: 'an an-file-text',              rota: '/orcamentos' },
+      { codigo: 'metas',      label: 'Metas',      icone: 'an an-target',                 rota: '/metas' },
+      { codigo: 'financeiro', label: 'Financeiro', icone: 'an an-currency-circle-dollar', rota: '/financeiro' },
     ];
     return mapa.filter((a) => telas.includes(a.codigo));
   });

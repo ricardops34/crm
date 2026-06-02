@@ -1,15 +1,15 @@
-# Apresentacao Executiva - CRM Comercial 360
+# Apresentacao Executiva - Visão 360
 
 ## Slide 1 - Capa
 
-**CRM Comercial 360**  
+**Visão 360**  
 Plataforma comercial integrada ao Protheus para elevar produtividade, controle e crescimento
 
 ---
 
 ## Slide 2 - Resumo Executivo
 
-O CRM Comercial 360 foi concebido para organizar a operacao comercial em um unico ambiente, integrando time de vendas, gestao, administrativo e financeiro com informacoes vindas do Protheus.
+O Visão 360 foi concebido para organizar a operacao comercial em um unico ambiente, integrando time de vendas, gestao, administrativo e financeiro com informacoes vindas do Protheus.
 
 O foco da primeira versao e entregar ganho pratico e rapido na rotina comercial, com mais visibilidade sobre carteira, clientes, orcamentos, propostas comerciais, financeiro e metas.
 
@@ -25,7 +25,7 @@ Hoje, grande parte da operacao comercial tende a enfrentar:
 - dependencia excessiva de consultas manuais no ERP
 - pouca padronizacao da rotina comercial
 
-O CRM Comercial 360 nasce para transformar dados operacionais em acao comercial.
+O Visão 360 nasce para transformar dados operacionais em acao comercial.
 
 ---
 
@@ -128,7 +128,7 @@ Com isso, a lideranca consegue acompanhar performance, agir mais cedo e direcion
 
 ## Slide 10 - Diferenciais Estruturais
 
-O CRM Comercial 360 foi desenhado com diferenciais importantes:
+O Visão 360 foi desenhado com diferenciais importantes:
 
 - integracao com Protheus
 - operacao multiempresa
@@ -171,7 +171,7 @@ Nao se trata apenas de uma ferramenta de consulta, mas de uma plataforma de oper
 
 ## Slide 12 - Ganhos Esperados
 
-Com a implantacao do CRM Comercial 360, a empresa tende a obter:
+Com a implantacao do Visão 360, a empresa tende a obter:
 
 - maior disciplina comercial
 - mais visibilidade da operacao
@@ -185,5 +185,5 @@ Com a implantacao do CRM Comercial 360, a empresa tende a obter:
 
 ## Slide 13 - Encerramento
 
-**CRM Comercial 360**  
+**Visão 360**  
 Uma base moderna para organizar a operacao comercial, apoiar a gestao e transformar informacao em crescimento.

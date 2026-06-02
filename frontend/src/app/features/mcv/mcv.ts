@@ -32,7 +32,7 @@ interface ClienteMcv {
             (p-click)="aplicarFiltro(f.valor)">
           </po-button>
         }
-        <po-button p-label="Atualizar" p-icon="ph ph-arrows-clockwise" (p-click)="carregar()"></po-button>
+        <po-button p-label="Atualizar" p-icon="an an-arrow-clockwise" (p-click)="carregar()"></po-button>
       </div>
 
       <po-table
@@ -68,8 +68,8 @@ export class McvComponent implements OnInit {
     {
       property: 'bloqueado', label: 'Situação', type: 'icon',
       icons: [
-        { value: 'false', icon: 'ph ph-lock-open', color: 'color-10', tooltip: 'Ativo' },
-        { value: 'true',  icon: 'ph ph-lock',      color: 'color-07', tooltip: 'Bloqueado' },
+        { value: 'false', icon: 'an an-lock-open', color: 'color-10', tooltip: 'Ativo' },
+        { value: 'true',  icon: 'an an-lock',      color: 'color-07', tooltip: 'Bloqueado' },
       ],
     },
     { property: 'codErp',          label: 'Código',      sortable: true },
@@ -83,7 +83,7 @@ export class McvComponent implements OnInit {
     {
       property: 'temComodato', label: 'Comodato', type: 'icon',
       icons: [
-        { value: 'true', icon: 'ph ph-package', color: 'color-01', tooltip: 'Possui comodato' },
+        { value: 'true', icon: 'an an-package', color: 'color-01', tooltip: 'Possui comodato' },
       ],
     },
   ];
@@ -91,12 +91,12 @@ export class McvComponent implements OnInit {
   acoes: PoTableAction[] = [
     {
       label: 'Cliente 360',
-      icon: 'ph ph-user-circle',
+      icon: 'an an-user-circle',
       action: (row: ClienteMcv) => this.router.navigate(['/clientes', row.id]),
     },
     {
       label: 'Financeiro',
-      icon: 'ph ph-currency-circle-dollar',
+      icon: 'an an-currency-circle-dollar',
       action: (row: ClienteMcv) =>
         this.router.navigate(['/clientes', row.id], { queryParams: { aba: 'financeiro' } }),
     },
