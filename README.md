@@ -76,9 +76,26 @@ docker compose -f docker-compose.dev.yml up -d
 Serviços previstos:
 
 - PostgreSQL: `localhost:5432`
+- pgAdmin: `http://localhost:5050`
 - Redis: `localhost:6379`
 - MinIO API: `localhost:9000`
 - MinIO Console: `localhost:9001`
+
+### Acesso ao pgAdmin
+
+Depois de subir a stack:
+
+- URL: `http://localhost:5050`
+- Usuário: valor de `PGADMIN_DEFAULT_EMAIL`
+- Senha: valor de `PGADMIN_DEFAULT_PASSWORD`
+
+Para conectar no PostgreSQL dentro do Docker, cadastre o servidor com:
+
+- Host: `postgres`
+- Porta: `5432`
+- Banco: valor de `DB_DATABASE`
+- Usuário: valor de `DB_USERNAME`
+- Senha: valor de `DB_PASSWORD`
 
 ## Como Rodar
 
@@ -132,4 +149,3 @@ npm test
 Leia também:
 
 - [CONTRIBUTING.md](./CONTRIBUTING.md)
-

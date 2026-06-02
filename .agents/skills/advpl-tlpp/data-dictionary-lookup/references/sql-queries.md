@@ -2,7 +2,7 @@
 
 Complete SQL queries for the `execute-sql` tool. Replace `{PLACEHOLDER}` with the desired values.
 
-> **Mandatory rules**: (1) `d_e_l_e_t_ = ' '` in every query. (2) Columns in **lowercase**. (3) `TRIM()` in `character` field comparisons. (4) Base table without suffix: `sx3`, never `sx3t10`.
+> **Mandatory rules**: (1) `D_E_L_E_T_ = ' '` in every query. (2) Columns in **UPPERCASE** (`X3_CAMPO`, `X3_TITULO`, etc.). (3) `TRIM()` in `character` field comparisons. (4) Use **company-suffixed tables**: `SX3010` (company 01), `SX3020` (company 02) — replace `{SX3}` placeholder with the correct table. Never use branch suffix `SX3T10`.
 
 ---
 
@@ -18,7 +18,7 @@ SELECT TRIM(x2_chave) AS alias,
        TRIM(x2_unico) AS unique_key,
        TRIM(x2_sysobj) AS mvc_routine,
        TRIM(x2_display) AS display_fields
-FROM sx2
+FROM {SX2}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x2_chave) = '{ALIAS}'
 ORDER BY x2_chave
@@ -29,7 +29,7 @@ ORDER BY x2_chave
 SELECT TRIM(x2_chave) AS alias,
        TRIM(x2_nome) AS description,
        x2_modo AS mode
-FROM sx2
+FROM {SX2}
 WHERE d_e_l_e_t_ = ' '
 ORDER BY x2_chave
 ```
@@ -39,7 +39,7 @@ ORDER BY x2_chave
 SELECT TRIM(x2_chave) AS alias,
        TRIM(x2_nome) AS description,
        x2_modo AS mode
-FROM sx2
+FROM {SX2}
 WHERE d_e_l_e_t_ = ' '
   AND UPPER(x2_nome) LIKE '%{TERM}%'
 ORDER BY x2_chave
@@ -66,7 +66,7 @@ SELECT TRIM(x3_campo) AS field,
        TRIM(x3_f3) AS f3_lookup,
        TRIM(x3_cbox) AS combo_box,
        TRIM(x3_trigger) AS has_trigger
-FROM sx3
+FROM {SX3}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x3_arquivo) = '{ALIAS}'
 ORDER BY x3_ordem
@@ -91,7 +91,7 @@ SELECT TRIM(x3_campo) AS field,
        TRIM(x3_propri) AS owner,
        TRIM(x3_grpsxg) AS field_group,
        TRIM(x3_folder) AS folder
-FROM sx3
+FROM {SX3}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x3_campo) = '{FIELD}'
 ```
@@ -103,7 +103,7 @@ SELECT TRIM(x3_campo) AS field,
        TRIM(x3_tipo) AS type,
        x3_tamanho AS size,
        x3_decimal AS decimals
-FROM sx3
+FROM {SX3}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x3_arquivo) = '{ALIAS}'
 ORDER BY x3_ordem
@@ -121,7 +121,7 @@ SELECT TRIM(indice) AS alias,
        TRIM(descricao) AS description,
        TRIM(nickname) AS nickname,
        TRIM(showpesq) AS show_in_search
-FROM six
+FROM {SIX}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(indice) = '{ALIAS}'
 ORDER BY ordem
@@ -142,7 +142,7 @@ SELECT TRIM(x6_var) AS parameter,
        TRIM(x6_propri) AS owner,
        TRIM(x6_valid) AS validation,
        TRIM(x6_init) AS initialization
-FROM sx6
+FROM {SX6}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x6_var) LIKE '{MV_NAME}%'
 ORDER BY x6_var
@@ -154,7 +154,7 @@ SELECT TRIM(x6_var) AS parameter,
        TRIM(x6_tipo) AS type,
        TRIM(x6_descric) AS description,
        TRIM(x6_conteud) AS default_value
-FROM sx6
+FROM {SX6}
 WHERE d_e_l_e_t_ = ' '
   AND (UPPER(x6_descric) LIKE '%{TERM}%' OR UPPER(x6_desc1) LIKE '%{TERM}%')
 ORDER BY x6_var
@@ -169,7 +169,7 @@ ORDER BY x6_var
 SELECT TRIM(x5_tabela) AS table_code,
        TRIM(x5_chave) AS key,
        TRIM(x5_descri) AS description
-FROM sx5
+FROM {SX5}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x5_tabela) = '{TABLE_CODE}'
 ORDER BY x5_chave
@@ -179,7 +179,7 @@ ORDER BY x5_chave
 ```sql
 SELECT DISTINCT TRIM(x5_tabela) AS table_code,
        MIN(TRIM(x5_descri)) AS sample_description
-FROM sx5
+FROM {SX5}
 WHERE d_e_l_e_t_ = ' '
 GROUP BY TRIM(x5_tabela)
 ORDER BY table_code
@@ -201,7 +201,7 @@ SELECT TRIM(x7_campo) AS source_field,
        x7_ordem AS index_order,
        TRIM(x7_chave) AS seek_key,
        TRIM(x7_condic) AS condition
-FROM sx7
+FROM {SX7}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x7_campo) LIKE '{FIELD}%'
 ORDER BY x7_campo, x7_sequenc
@@ -214,7 +214,7 @@ SELECT TRIM(x7_campo) AS source_field,
        TRIM(x7_cdomin) AS target_field,
        TRIM(x7_regra) AS rule,
        TRIM(x7_tipo) AS type
-FROM sx7
+FROM {SX7}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x7_campo) LIKE '{FIELD_PREFIX}_%'
 ORDER BY x7_campo, x7_sequenc
@@ -236,7 +236,7 @@ SELECT TRIM(x1_grupo) AS group_code,
        TRIM(x1_gsc) AS get_type,
        TRIM(x1_def01) AS option_01,
        TRIM(x1_def02) AS option_02
-FROM sx1
+FROM {SX1}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(x1_grupo) = '{GROUP}'
 ORDER BY x1_ordem
@@ -254,7 +254,7 @@ SELECT TRIM(x9_dom) AS domain_table,
        TRIM(x9_expcdom) AS counter_domain_expression,
        TRIM(x9_vinfil) AS branch_binding,
        TRIM(x9_chvfor) AS strong_key
-FROM sx9
+FROM {SX9}
 WHERE d_e_l_e_t_ = ' '
   AND (TRIM(x9_dom) = '{ALIAS}' OR TRIM(x9_cdom) = '{ALIAS}')
 ORDER BY x9_dom, x9_cdom
@@ -272,7 +272,7 @@ SELECT TRIM(xb_alias) AS alias,
        TRIM(xb_coluna) AS column_name,
        TRIM(xb_descri) AS description,
        TRIM(xb_contem) AS content
-FROM sxb
+FROM {SXB}
 WHERE d_e_l_e_t_ = ' '
   AND TRIM(xb_alias) = '{F3_CODE}'
 ORDER BY xb_tipo, xb_seq
@@ -282,59 +282,61 @@ ORDER BY xb_tipo, xb_seq
 
 ## Consultas Combinadas
 
+> In all combined queries, replace `{SX3}` with `SX3010` or `SX3020` and `{SX7}` with `SX7010` or `SX7020` according to the target company.
+
 ### Campos com gatilhos de uma tabela (SX3 + SX7)
 
 ```sql
-SELECT TRIM(s3.x3_campo) AS campo,
-       TRIM(s3.x3_titulo) AS titulo,
-       TRIM(s7.x7_cdomin) AS campo_destino,
-       TRIM(s7.x7_regra) AS regra
-FROM sx3 s3
-INNER JOIN sx7 s7 ON TRIM(s7.x7_campo) = TRIM(s3.x3_campo)
-WHERE s3.d_e_l_e_t_ = ' '
-  AND s7.d_e_l_e_t_ = ' '
-  AND TRIM(s3.x3_arquivo) = '{ALIAS}'
-ORDER BY s3.x3_campo, s7.x7_sequenc
+SELECT TRIM(s3.X3_CAMPO) AS campo,
+       TRIM(s3.X3_TITULO) AS titulo,
+       TRIM(s7.X7_CDOMIN) AS campo_destino,
+       TRIM(s7.X7_REGRA) AS regra
+FROM {SX3} s3
+INNER JOIN {SX7} s7 ON TRIM(s7.X7_CAMPO) = TRIM(s3.X3_CAMPO)
+WHERE s3.D_E_L_E_T_ = ' '
+  AND s7.D_E_L_E_T_ = ' '
+  AND TRIM(s3.X3_ARQUIVO) = '{ALIAS}'
+ORDER BY s3.X3_CAMPO, s7.X7_SEQUENC
 ```
 
 ### Campos obrigatórios de uma tabela
 
 ```sql
-SELECT TRIM(x3_campo) AS campo,
-       TRIM(x3_titulo) AS titulo,
-       TRIM(x3_tipo) AS tipo,
-       x3_tamanho AS tamanho
-FROM sx3
-WHERE d_e_l_e_t_ = ' '
-  AND TRIM(x3_arquivo) = '{ALIAS}'
-  AND x3_obrigat IS NOT NULL
-  AND TRIM(x3_obrigat) <> ''
-ORDER BY x3_ordem
+SELECT TRIM(X3_CAMPO) AS campo,
+       TRIM(X3_TITULO) AS titulo,
+       TRIM(X3_TIPO) AS tipo,
+       X3_TAMANHO AS tamanho
+FROM {SX3}
+WHERE D_E_L_E_T_ = ' '
+  AND TRIM(X3_ARQUIVO) = '{ALIAS}'
+  AND X3_OBRIGAT IS NOT NULL
+  AND TRIM(X3_OBRIGAT) <> ''
+ORDER BY X3_ORDEM
 ```
 
 ### Campos virtuais de uma tabela
 
 ```sql
-SELECT TRIM(x3_campo) AS campo,
-       TRIM(x3_titulo) AS titulo,
-       TRIM(x3_relacao) AS inicializador,
-       TRIM(x3_inibrw) AS inicializador_browse
-FROM sx3
-WHERE d_e_l_e_t_ = ' '
-  AND TRIM(x3_arquivo) = '{ALIAS}'
-  AND TRIM(x3_context) = 'V'
-ORDER BY x3_ordem
+SELECT TRIM(X3_CAMPO) AS campo,
+       TRIM(X3_TITULO) AS titulo,
+       TRIM(X3_RELACAO) AS inicializador,
+       TRIM(X3_INIBRW) AS inicializador_browse
+FROM {SX3}
+WHERE D_E_L_E_T_ = ' '
+  AND TRIM(X3_ARQUIVO) = '{ALIAS}'
+  AND TRIM(X3_CONTEXT) = 'V'
+ORDER BY X3_ORDEM
 ```
 
 ### Campos com consulta padrão (F3)
 
 ```sql
-SELECT TRIM(x3_campo) AS campo,
-       TRIM(x3_titulo) AS titulo,
-       TRIM(x3_f3) AS codigo_f3
-FROM sx3
-WHERE d_e_l_e_t_ = ' '
-  AND TRIM(x3_arquivo) = '{ALIAS}'
-  AND TRIM(x3_f3) <> ''
-ORDER BY x3_ordem
+SELECT TRIM(X3_CAMPO) AS campo,
+       TRIM(X3_TITULO) AS titulo,
+       TRIM(X3_F3) AS codigo_f3
+FROM {SX3}
+WHERE D_E_L_E_T_ = ' '
+  AND TRIM(X3_ARQUIVO) = '{ALIAS}'
+  AND TRIM(X3_F3) <> ''
+ORDER BY X3_ORDEM
 ```

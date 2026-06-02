@@ -1,8 +1,8 @@
 <po-toolbar
-  p-title="CRM Comercial 360"
+  p-title="Visão 360"
   [p-profile]="profile">
 </po-toolbar>
 
-<po-menu [p-menus]="menus" p-filter="true">
+<po-menu p-collapsed="true" [p-menus]="menus" p-filter="true" [p-automatic-toggle]="true">
   <router-outlet></router-outlet>
 </po-menu>

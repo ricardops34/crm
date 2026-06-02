@@ -25,7 +25,9 @@ export interface JwtPayload {
   telas: string[];
   modulos: JwtModulo[];
   empresa_id: number;
+  empresa_nome: string;
   empresas: number[];
+  empresas_detalhes: Array<{ id: number; nome: string }>;
   primeiro_acesso: boolean;
   iat?: number;
   exp?: number;

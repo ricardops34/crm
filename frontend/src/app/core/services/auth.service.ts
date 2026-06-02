@@ -4,7 +4,12 @@ import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { JwtPayload, LoginResponse } from '../interfaces/jwt-payload.interface';
+import {
+  AuthLoginResult,
+  BuscarEmpresasLoginResponse,
+  JwtPayload,
+  LoginResponse,
+} from '../interfaces/jwt-payload.interface';
 
 const API = '/api';
 const TOKEN_KEY = 'crm_token';
@@ -19,10 +24,22 @@ export class AuthService {
     this.restaurarSessao();
   }
 
-  login(email: string, senha: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${API}/auth/login`, { email, senha }).pipe(
-      tap((res) => this.salvarToken(res.access_token)),
+  login(email: string, senha: string, empresaId?: number): Observable<AuthLoginResult> {
+    return this.http.post<AuthLoginResult>(`${API}/auth/login`, {
+      email,
+      senha,
+      ...(empresaId ? { empresa_id: empresaId } : {}),
+    }).pipe(
+      tap((res) => {
+        if (this.isLoginResponse(res)) {
+          this.salvarToken(res.access_token);
+        }
+      }),
     );
+  }
+
+  buscarEmpresasPorLogin(email: string): Observable<BuscarEmpresasLoginResponse> {
+    return this.http.post<BuscarEmpresasLoginResponse>(`${API}/auth/login/empresas`, { email });
   }
 
   trocarEmpresa(empresaId: number): Observable<LoginResponse> {
@@ -72,6 +89,10 @@ export class AuthService {
     return this.isLoggedIn();
   }
 
+  isLoginResponse(response: AuthLoginResult): response is LoginResponse {
+    return 'access_token' in response;
+  }
+
   private salvarToken(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
     this._payload.set(this.decodificar(token));
@@ -91,10 +112,22 @@ export class AuthService {
 
   private decodificar(token: string): JwtPayload | null {
     try {
-      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-      return JSON.parse(atob(base64)) as JwtPayload;
+      const base64Url = token.split('.')[1];
+      if (!base64Url) return null;
+
+      const json = this.base64UrlParaUtf8(base64Url);
+      return JSON.parse(json) as JwtPayload;
     } catch {
       return null;
     }
+  }
+
+  private base64UrlParaUtf8(base64Url: string): string {
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const padding = '='.repeat((4 - (base64.length % 4)) % 4);
+    const binary = atob(`${base64}${padding}`);
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+
+    return new TextDecoder('utf-8').decode(bytes);
   }
 }

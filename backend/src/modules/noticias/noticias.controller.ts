@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { NoticiasService } from './noticias.service';
 import { CreateNoticiaDto } from './dto/create-noticia.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -49,6 +49,7 @@ export class NoticiasController {
   @UseGuards(PerfilGuard)
   @Perfis('Admin', 'Gerente', 'Administrativo')
   @ApiOperation({ summary: 'Atualizar notícia' })
+  @ApiParam({ name: 'id', description: 'UUID da notícia' })
   update(@Param('id') id: string, @Body() dto: Partial<CreateNoticiaDto>) {
     return this.svc.update(id, dto);
   }
@@ -57,6 +58,7 @@ export class NoticiasController {
   @UseGuards(PerfilGuard)
   @Perfis('Admin', 'Gerente', 'Administrativo')
   @ApiOperation({ summary: 'Ativar / Desativar notícia' })
+  @ApiParam({ name: 'id', description: 'UUID da notícia' })
   toggleAtivo(@Param('id') id: string) {
     return this.svc.toggleAtivo(id);
   }

@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import {
   PoModule,
   PoModalAction,
+  PoModalComponent,
   PoNotificationService,
   PoTableColumn,
 } from '@po-ui/ng-components';
@@ -94,6 +95,8 @@ interface UsuarioOpt { label: string; value: string; }
   `,
 })
 export class VendedoresPageComponent implements OnInit {
+  @ViewChild('modal') modal!: PoModalComponent;
+
   private http = inject(HttpClient);
   private notify = inject(PoNotificationService);
 
@@ -127,7 +130,7 @@ export class VendedoresPageComponent implements OnInit {
   ];
 
   acaoPrimaria: PoModalAction = { label: 'Salvar', action: () => this.salvar() };
-  acaoSecundaria: PoModalAction = { label: 'Cancelar', action: () => {} };
+  acaoSecundaria: PoModalAction = { label: 'Cancelar', action: () => this.modal.close() };
 
   ngOnInit() {
     this.carregar();
@@ -164,6 +167,7 @@ export class VendedoresPageComponent implements OnInit {
   abrirNovo() {
     this.modoEdicao = false;
     this.form = { codErp: '', nome: '', tipo: 'vendedor', usuario_id: null, supervisor_id: null, gerente_id: null };
+    this.modal.open();
   }
 
   editar(v: Vendedor) {
@@ -173,6 +177,7 @@ export class VendedoresPageComponent implements OnInit {
       codErp: v.codErp, nome: v.nome, tipo: v.tipo,
       usuario_id: v.usuarioId ?? '', supervisor_id: v.supervisorId ?? '', gerente_id: v.gerenteId ?? '',
     };
+    this.modal.open();
   }
 
   salvar() {
@@ -188,7 +193,7 @@ export class VendedoresPageComponent implements OnInit {
       : this.http.post('/api/vendedores', { ...payload, empresa_id: 1, cod_erp: payload.codErp });
 
     obs.subscribe({
-      next: () => { this.notify.success('Salvo!'); this.carregar(); },
+      next: () => { this.notify.success('Salvo!'); this.modal.close(); this.carregar(); },
       error: (err) => this.notify.error(err?.error?.message ?? 'Erro ao salvar.'),
     });
   }

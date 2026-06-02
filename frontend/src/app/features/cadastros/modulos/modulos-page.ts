@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import {
   PoModule,
   PoModalAction,
+  PoModalComponent,
   PoNotificationService,
   PoTableColumn,
 } from '@po-ui/ng-components';
@@ -45,10 +46,10 @@ interface Modulo {
       #modalForm
       [p-title]="modoEdicao ? 'Editar Módulo' : 'Novo Módulo'"
       [p-primary-action]="acaoPrimaria"
-      [p-secondary-action]="acaoSecundaria">
+      [p-secondary-action]="acaoCancelarForm">
 
       <po-input name="nome" [(ngModel)]="form.nome" p-label="Nome" p-required></po-input>
-      <po-input name="icone" [(ngModel)]="form.icone" p-label="Ícone (classe Phosphor)" p-placeholder="an an-folder-open" p-required></po-input>
+      <po-input name="icone" [(ngModel)]="form.icone" p-label="Ícone (ex: an an-folder-open)" p-placeholder="an an-folder-open" p-required></po-input>
       <po-input name="ordem" [(ngModel)]="form.ordem" p-label="Ordem" p-type="number"></po-input>
 
       <div class="po-mt-2">
@@ -65,7 +66,7 @@ interface Modulo {
       #modalConfig
       [p-title]="'Configurar: ' + (moduloAtivo()?.nome ?? '')"
       [p-primary-action]="acaoSalvarConfig"
-      [p-secondary-action]="acaoSecundaria"
+      [p-secondary-action]="acaoCancelarConfig"
       p-size="xl">
 
       <div class="po-row">
@@ -102,6 +103,9 @@ interface Modulo {
   `,
 })
 export class ModulosPageComponent implements OnInit {
+  @ViewChild('modalForm') modalForm!: PoModalComponent;
+  @ViewChild('modalConfig') modalConfig!: PoModalComponent;
+
   private http = inject(HttpClient);
   private notify = inject(PoNotificationService);
 
@@ -137,7 +141,8 @@ export class ModulosPageComponent implements OnInit {
 
   acaoPrimaria: PoModalAction = { label: 'Salvar', action: () => this.salvar() };
   acaoSalvarConfig: PoModalAction = { label: 'Salvar configuração', action: () => this.salvarConfig() };
-  acaoSecundaria: PoModalAction = { label: 'Cancelar', action: () => {} };
+  acaoCancelarForm: PoModalAction = { label: 'Cancelar', action: () => this.modalForm.close() };
+  acaoCancelarConfig: PoModalAction = { label: 'Cancelar', action: () => this.modalConfig.close() };
 
   ngOnInit() {
     this.carregar();
@@ -162,12 +167,14 @@ export class ModulosPageComponent implements OnInit {
   abrirNovo() {
     this.modoEdicao = false;
     this.form = { nome: '', icone: 'an an-folder-open', ordem: this.modulos().length, somente_admin: false };
+    this.modalForm.open();
   }
 
   editar(m: Modulo) {
     this.modoEdicao = true;
     this.idEdicao = m.id;
     this.form = { nome: m.nome, icone: m.icone, ordem: m.ordem, somente_admin: m.somenteAdmin };
+    this.modalForm.open();
   }
 
   salvar() {
@@ -175,7 +182,11 @@ export class ModulosPageComponent implements OnInit {
       ? this.http.patch(`/api/modulos/${this.idEdicao}`, this.form)
       : this.http.post('/api/modulos', this.form);
     obs.subscribe({
-      next: () => { this.notify.success('Módulo salvo!'); this.carregar(); },
+      next: () => {
+        this.notify.success('Módulo salvo!');
+        this.modalForm.close();
+        this.carregar();
+      },
       error: (err) => this.notify.error(err?.error?.message ?? 'Erro.'),
     });
   }
@@ -184,6 +195,7 @@ export class ModulosPageComponent implements OnInit {
     this.moduloAtivo.set(m);
     this.telasSelecionadas = (m.telas ?? []).map((t) => t.id);
     this.perfisSelecionados = (m.perfis ?? []).map((p) => p.id);
+    this.modalConfig.open();
   }
 
   salvarConfig() {
@@ -202,6 +214,7 @@ export class ModulosPageComponent implements OnInit {
 
     Promise.all(ops).then(() => {
       this.notify.success('Configuração salva!');
+      this.modalConfig.close();
       this.carregar();
     }).catch(() => this.notify.error('Erro ao salvar configuração.'));
   }

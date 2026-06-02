@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -32,6 +32,7 @@ export class UsuariosController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Detalhe do usuário' })
+  @ApiParam({ name: 'id', description: 'UUID do usuário' })
   findOne(@Param('id') id: string) {
     return this.usuariosService.findOne(id);
   }
@@ -46,6 +47,7 @@ export class UsuariosController {
   @Patch(':id')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Atualizar dados e perfil' })
+  @ApiParam({ name: 'id', description: 'UUID do usuário' })
   update(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {
     return this.usuariosService.update(id, dto);
   }
@@ -53,6 +55,7 @@ export class UsuariosController {
   @Patch(':id/reset-senha')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Forçar reset de senha (gera nova senha temporária)' })
+  @ApiParam({ name: 'id', description: 'UUID do usuário' })
   resetSenha(@Param('id') id: string) {
     return this.usuariosService.resetSenha(id);
   }
@@ -60,6 +63,8 @@ export class UsuariosController {
   @Patch(':id/ativo')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Ativar / Desativar usuário' })
+  @ApiParam({ name: 'id', description: 'UUID do usuário' })
+  @ApiBody({ schema: { properties: { ativo: { type: 'boolean' } }, required: ['ativo'] } })
   toggleAtivo(@Param('id') id: string, @Body('ativo') ativo: boolean) {
     return this.usuariosService.toggleAtivo(id, ativo);
   }

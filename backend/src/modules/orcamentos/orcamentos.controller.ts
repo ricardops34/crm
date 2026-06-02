@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Response } from 'express';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { OrcamentosService } from './orcamentos.service';
 import { OrcamentoPdfService } from './orcamento-pdf.service';
@@ -45,12 +45,14 @@ export class OrcamentosController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Detalhe do orçamento com itens' })
+  @ApiParam({ name: 'id', description: 'UUID do orçamento' })
   findOne(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
     return this.orcamentosService.findOne(id, user.empresa_id);
   }
 
   @Get(':id/pdf')
   @ApiOperation({ summary: 'Gerar e baixar PDF do orçamento' })
+  @ApiParam({ name: 'id', description: 'UUID do orçamento' })
   async gerarPdf(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
@@ -67,6 +69,7 @@ export class OrcamentosController {
 
   @Get(':id/logs')
   @ApiOperation({ summary: 'Histórico de envios do orçamento' })
+  @ApiParam({ name: 'id', description: 'UUID do orçamento' })
   getLogs(@Param('id') id: string) {
     return this.pdfService.getLogs(id);
   }
@@ -79,6 +82,7 @@ export class OrcamentosController {
 
   @Post(':id/enviar')
   @ApiOperation({ summary: 'Enviar orçamento → gera PDF e registra log' })
+  @ApiParam({ name: 'id', description: 'UUID do orçamento' })
   async enviar(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
@@ -96,6 +100,7 @@ export class OrcamentosController {
 
   @Post(':id/copiar')
   @ApiOperation({ summary: 'Copiar orçamento (gera novo número sequencial)' })
+  @ApiParam({ name: 'id', description: 'UUID do orçamento' })
   copiar(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
     return this.orcamentosService.copiar(id, user);
   }

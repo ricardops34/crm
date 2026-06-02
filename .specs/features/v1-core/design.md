@@ -2,7 +2,7 @@
 
 ## Design Goal
 
-Definir a arquitetura funcional e técnica mínima para implementar a V1 do CRM Comercial 360 com Angular + PO-UI no frontend e API REST com PostgreSQL + Redis no backend, preservando integração forte com Protheus.
+Definir a arquitetura funcional e técnica mínima para implementar a V1 do Visão 360com Angular + PO-UI no frontend e API REST com PostgreSQL + Redis no backend, preservando integração forte com Protheus.
 
 ## System Decomposition
 

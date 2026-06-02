@@ -1,7 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { PoModule, PoModalAction, PoNotificationService, PoTableColumn, PoCheckboxGroupOption } from '@po-ui/ng-components';
+import { PoModule, PoModalAction, PoModalComponent, PoNotificationService, PoTableColumn, PoCheckboxGroupOption } from '@po-ui/ng-components';
 
 interface Tela { id: string; codigo: string; nome: string; modulo: string; }
 interface Perfil { id: string; nome: string; descricao: string; versao: number; ativo: boolean; telas?: Tela[]; }
@@ -50,6 +50,8 @@ interface Perfil { id: string; nome: string; descricao: string; versao: number; 
   `,
 })
 export class PerfisPageComponent implements OnInit {
+  @ViewChild('modal') modal!: PoModalComponent;
+
   private http = inject(HttpClient);
   private notify = inject(PoNotificationService);
 
@@ -72,7 +74,7 @@ export class PerfisPageComponent implements OnInit {
   ];
 
   acaoPrimaria: PoModalAction = { label: 'Salvar', action: () => this.salvarTelas() };
-  acaoSecundaria: PoModalAction = { label: 'Cancelar', action: () => {} };
+  acaoSecundaria: PoModalAction = { label: 'Cancelar', action: () => this.modal.close() };
 
   modulos = signal<{ nome: string; opcoes: PoCheckboxGroupOption[] }[]>([]);
 
@@ -104,6 +106,7 @@ export class PerfisPageComponent implements OnInit {
     this.modulos.set(
       Array.from(porModulo.entries()).map(([nome, opcoes]) => ({ nome, opcoes })),
     );
+    this.modal.open();
   }
 
   salvarTelas() {
@@ -111,7 +114,7 @@ export class PerfisPageComponent implements OnInit {
     if (!p) return;
 
     this.http.put(`/api/perfis/${p.id}/telas`, { tela_ids: this.telasSelecionadas }).subscribe({
-      next: () => { this.notify.success('Telas atualizadas!'); this.carregar(); },
+      next: () => { this.notify.success('Telas atualizadas!'); this.modal.close(); this.carregar(); },
       error: (err) => this.notify.error(err?.error?.message ?? 'Erro ao salvar.'),
     });
   }

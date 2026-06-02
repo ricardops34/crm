@@ -161,7 +161,7 @@ async function seed() {
       icone: 'an an-folder-open',
       ordem: 3,
       somenteAdmin: false,
-      telas: ['usuarios', 'vendedores', 'noticias'],
+      telas: ['vendedores', 'noticias'],
       perfis: ['Admin', 'Administrativo'],
     },
     {
@@ -169,7 +169,7 @@ async function seed() {
       icone: 'an an-gear-six',
       ordem: 4,
       somenteAdmin: true,
-      telas: ['perfis', 'parametros', 'modulos'],
+      telas: ['usuarios', 'perfis', 'parametros', 'modulos'],
       perfis: ['Admin'],
     },
   ];
@@ -183,9 +183,22 @@ async function seed() {
       modulo = moduloRepo.create({ nome: md.nome, icone: md.icone, ordem: md.ordem, somenteAdmin: md.somenteAdmin });
       modulo = await moduloRepo.save(modulo);
     } else {
-      modulo.icone = md.icone;
-      modulo.ordem = md.ordem;
-      modulo.somenteAdmin = md.somenteAdmin;
+      await moduloRepo.update(
+        { nome: md.nome },
+        {
+          icone: md.icone,
+          ordem: md.ordem,
+          somenteAdmin: md.somenteAdmin,
+        },
+      );
+    }
+
+    modulo = await moduloRepo.findOne({
+      where: { nome: md.nome },
+      relations: ['telas', 'perfis'],
+    });
+    if (!modulo) {
+      throw new Error(`Módulo ${md.nome} não encontrado após persistência.`);
     }
 
     // Vincula telas ao módulo (via modulo_id na tela)

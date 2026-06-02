@@ -9,11 +9,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { BuscarEmpresasLoginDto } from './dto/buscar-empresas-login.dto';
 import { AlterarSenhaDto } from './dto/alterar-senha.dto';
 import { EsqueciSenhaDto } from './dto/esqueci-senha.dto';
 import { RedefinirSenhaDto } from './dto/redefinir-senha.dto';
@@ -37,6 +38,15 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  @Public()
+  @Post('login/empresas')
+  @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 10, ttl: 900000 } })
+  @ApiOperation({ summary: 'Listar empresas disponíveis para o login informado' })
+  buscarEmpresas(@Body() dto: BuscarEmpresasLoginDto) {
+    return this.authService.buscarEmpresasPorLogin(dto.email);
+  }
+
   @Get('me')
   @ApiBearerAuth('JWT')
   @ApiOperation({ summary: 'Dados do usuário logado' })
@@ -48,6 +58,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('JWT')
   @ApiOperation({ summary: 'Trocar empresa ativa' })
+  @ApiParam({ name: 'id', type: Number, description: 'ID da empresa' })
   trocarEmpresa(@CurrentUser() user: JwtPayload, @Param('id', ParseIntPipe) id: number) {
     return this.authService.trocarEmpresa(user.sub, id);
   }

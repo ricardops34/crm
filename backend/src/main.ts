@@ -26,8 +26,8 @@ async function bootstrap() {
 
   // Swagger / OpenAPI
   const config = new DocumentBuilder()
-    .setTitle('CRM Comercial 360 API')
-    .setDescription('API REST do CRM Comercial 360 — RCG/CBA')
+    .setTitle('Visão 360API')
+    .setDescription('API REST do Visão 360— RCG/CBA')
     .setVersion('1.0')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },

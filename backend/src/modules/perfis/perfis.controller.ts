@@ -9,7 +9,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { PerfisService } from './perfis.service';
 import { CreatePerfilDto } from './dto/create-perfil.dto';
@@ -40,6 +40,7 @@ export class PerfisController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Detalhe do perfil com telas' })
+  @ApiParam({ name: 'id', description: 'UUID do perfil' })
   findOne(@Param('id') id: string) {
     return this.perfisService.findOne(id);
   }
@@ -54,6 +55,7 @@ export class PerfisController {
   @Patch(':id')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Atualizar nome/descrição do perfil' })
+  @ApiParam({ name: 'id', description: 'UUID do perfil' })
   update(@Param('id') id: string, @Body() dto: CreatePerfilDto) {
     return this.perfisService.update(id, dto);
   }
@@ -61,12 +63,14 @@ export class PerfisController {
   @Delete(':id')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Excluir perfil' })
+  @ApiParam({ name: 'id', description: 'UUID do perfil' })
   remove(@Param('id') id: string) {
     return this.perfisService.remove(id);
   }
 
   @Get(':id/telas')
   @ApiOperation({ summary: 'Telas do perfil' })
+  @ApiParam({ name: 'id', description: 'UUID do perfil' })
   getTelas(@Param('id') id: string) {
     return this.perfisService.getTelas(id);
   }
@@ -74,6 +78,7 @@ export class PerfisController {
   @Put(':id/telas')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Substituir conjunto de telas do perfil (batch)' })
+  @ApiParam({ name: 'id', description: 'UUID do perfil' })
   updateTelas(@Param('id') id: string, @Body() dto: UpdatePerfilTelasDto) {
     return this.perfisService.updateTelas(id, dto);
   }
@@ -81,6 +86,8 @@ export class PerfisController {
   @Post(':id/telas/:telaId')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Adicionar tela ao perfil' })
+  @ApiParam({ name: 'id', description: 'UUID do perfil' })
+  @ApiParam({ name: 'telaId', description: 'UUID da tela' })
   addTela(@Param('id') id: string, @Param('telaId') telaId: string) {
     return this.perfisService.addTela(id, telaId);
   }
@@ -88,6 +95,8 @@ export class PerfisController {
   @Delete(':id/telas/:telaId')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Remover tela do perfil' })
+  @ApiParam({ name: 'id', description: 'UUID do perfil' })
+  @ApiParam({ name: 'telaId', description: 'UUID da tela' })
   removeTela(@Param('id') id: string, @Param('telaId') telaId: string) {
     return this.perfisService.removeTela(id, telaId);
   }

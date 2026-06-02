@@ -1,4 +1,4 @@
-# PRD - CRM Comercial 360 RCG/CBA
+# PRD - Visão 360RCG/CBA
 
 ## Base de Referência
 

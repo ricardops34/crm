@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { VendedoresService } from './vendedores.service';
 import { CreateVendedorDto } from './dto/create-vendedor.dto';
 import { UpdateVendedorDto } from './dto/update-vendedor.dto';
@@ -38,6 +38,7 @@ export class VendedoresController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Detalhe do vendedor' })
+  @ApiParam({ name: 'id', description: 'UUID do vendedor' })
   findOne(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
     return this.svc.findOne(id, user.empresa_id);
   }
@@ -54,6 +55,7 @@ export class VendedoresController {
   @UseGuards(PerfilGuard)
   @Perfis('Admin', 'Administrativo')
   @ApiOperation({ summary: 'Atualizar vendedor' })
+  @ApiParam({ name: 'id', description: 'UUID do vendedor' })
   update(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,

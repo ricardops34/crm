@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { ParametrosService } from './parametros.service';
 import { UpdateParametroDto } from './dto/update-parametro.dto';
@@ -23,6 +23,7 @@ export class ParametrosController {
 
   @Get(':grupo')
   @ApiOperation({ summary: 'Parâmetros de um grupo' })
+  @ApiParam({ name: 'grupo', description: 'Nome do grupo de parâmetros (ex: smtp, geral)' })
   findByGrupo(@Param('grupo') grupo: string) {
     return this.parametrosService.findByGrupo(grupo);
   }
@@ -30,6 +31,8 @@ export class ParametrosController {
   @Put(':grupo/:chave')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Atualizar um parâmetro' })
+  @ApiParam({ name: 'grupo', description: 'Nome do grupo' })
+  @ApiParam({ name: 'chave', description: 'Chave do parâmetro' })
   update(
     @Param('grupo') grupo: string,
     @Param('chave') chave: string,
@@ -41,6 +44,14 @@ export class ParametrosController {
   @Put(':grupo')
   @Perfis('Admin')
   @ApiOperation({ summary: 'Atualizar grupo inteiro (batch)' })
+  @ApiParam({ name: 'grupo', description: 'Nome do grupo' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: { type: 'string', nullable: true },
+      example: { smtp_host: 'smtp.exemplo.com', smtp_porta: '587' },
+    },
+  })
   updateGrupo(
     @Param('grupo') grupo: string,
     @Body() updates: Record<string, string | null>,

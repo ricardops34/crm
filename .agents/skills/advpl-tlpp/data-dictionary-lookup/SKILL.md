@@ -6,7 +6,7 @@ metadata:
   domain: Protheus
   maintainer: Customizações ADVPL/TLPP
   author: Thalion Starforge
-  version: '4.1.0'
+  version: '4.2.0'
   category: Documentation
 ---
 
@@ -62,12 +62,51 @@ Protheus organizes its metadata in SX* tables:
 
 ---
 
+## Multi-Company Table Suffix
+
+In SQL Server environments with multiple companies, the SX* dictionary tables are suffixed with the **company code** (zero-padded to 3 digits):
+
+| Company | SX2 | SX3 | SIX | SX5 | SX6 | SX7 |
+|---------|-----|-----|-----|-----|-----|-----|
+| Company 01 | `SX2010` | `SX3010` | `SIX010` | `SX5010` | `SX6010` | `SX7010` |
+| Company 02 | `SX2020` | `SX3020` | `SIX020` | `SX5020` | `SX6020` | `SX7020` |
+
+> The base table (`SX3`, `SX2`, `SIX`) in these environments contains only cross-company customizations or may be empty. **Always query the suffixed table** for the target company.
+
+### Determining the correct suffix
+
+**Step 1 — Check if the user specified a company.** If they said "company 01" or "empresa 01", use suffix `010`. If "company 02" / "empresa 02", use `020`.
+
+**Step 2 — If not specified, discover available company tables:**
+
+```sql
+SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_NAME LIKE 'SX3%'
+  AND TABLE_NAME NOT LIKE '%BKP%'
+  AND TABLE_NAME NOT LIKE '%XNQ%'
+ORDER BY TABLE_NAME
+```
+
+**Step 3 — If multiple companies exist and the user did not specify, ask before querying.** Do not assume company 01.
+
+**Step 4 — If base table (`SX3`) returns 0 rows for the target alias**, automatically retry with the `010` suffix (company 01 default).
+
+### This environment
+
+- **Company 01 → suffix `010`** (e.g., `SX3010`, `SX2010`, `SIX010`)
+- **Company 02 → suffix `020`** (e.g., `SX3020`, `SX2020`, `SIX020`)
+- Base tables (`SX3`, `SX2`, `SIX`) contain only cross-company custom fields
+
+---
+
 ## Mandatory Rules for execute-sql Queries
 
-1. **Always** include `d_e_l_e_t_ = ' '` (soft-delete filter)
-2. Columns are **lowercase** — never use `X3_CAMPO`, always `x3_campo`
+1. **Always** include `D_E_L_E_T_ = ' '` (soft-delete filter)
+2. Columns are **uppercase** in this environment — use `X3_CAMPO`, `X3_TITULO`, etc.
 3. Use `TRIM()` in `character` field comparisons (trailing spaces)
-4. Use **base** table without suffix: `sx3`, `sx2`, `six` — **never** `sx3t10`, `sx2t10`
+4. Use the **suffixed table** for company-specific queries: `SX3010`, `SX2010`, `SIX010`
+5. Never use branch suffix: `SX3T10` — this is different from the company suffix `SX3010`
 
 ---
 
@@ -77,19 +116,19 @@ Protheus organizes its metadata in SX* tables:
 
 Execute **3 queries in parallel** (see queries in [references/sql-queries.md](references/sql-queries.md)):
 
-1. **Metadata** → SX2 filtering by `x2_chave`
-2. **Fields** → SX3 filtering by `x3_arquivo`
-3. **Indexes** → SIX filtering by `indice`
+1. **Metadata** → `SX2{SUFFIX}` filtering by `X2_CHAVE`
+2. **Fields** → `SX3{SUFFIX}` filtering by `X3_ARQUIVO`
+3. **Indexes** → `SIX{SUFFIX}` filtering by `INDICE`
 
 ### Parameter lookup
 
-1. Search by exact name (`TRIM(x6_var) LIKE 'MV_NAME%'`) or by description (`UPPER(x6_descric) LIKE '%TERM%'`)
+1. Search by exact name (`TRIM(X6_VAR) LIKE 'MV_NAME%'`) or by description (`UPPER(X6_DESCRIC) LIKE '%TERM%'`)
 2. If additional context is needed, search TDN documentation via `product-docs-search`
 
 ### Field triggers
 
-1. Query SX7 filtering by `x7_campo`
-2. Combine with SX3 to get field titles for involved fields
+1. Query `SX7{SUFFIX}` filtering by `X7_CAMPO`
+2. Combine with `SX3{SUFFIX}` to get field titles for involved fields
 
 ---
 
@@ -106,29 +145,25 @@ When presenting results to the user, always:
 ### Response Example
 
 ```markdown
-## SA1 — Customer Registry
+## SA1 — Clientes
 
-**Mode**: Shared (C/C/C)
-**Unique key**: A1_FILIAL+A1_COD+A1_LOJA
-**MVC Routine**: CRMA980
+**Modo:** Compartilhado (C) | **Chave única:** A1_FILIAL+A1_COD+A1_LOJA | **Rotina MVC:** CRMA980
 
-### Main Fields
+### Campos Principais
 
-| Field | Title | Type | Size | Dec | Required | Context |
-|-------|-------|------|------|-----|----------|---------|
-| A1_FILIAL | Branch | C | 8 | 0 | Yes | Real |
-| A1_COD | Code | C | 6 | 0 | Yes | Real |
-| A1_LOJA | Store | C | 2 | 0 | Yes | Real |
-| A1_NOME | Name | C | 40 | 0 | Yes | Real |
-...
+| Campo | Título | Tipo | Tam | Dec | Contexto | Obrig | F3 |
+|-------|--------|------|-----|-----|----------|-------|----|
+| A1_FILIAL | Filial | C | 2 | — | — | x | — |
+| A1_COD | Codigo | C | 6 | — | R | x | — |
+| A1_LOJA | Loja | C | 2 | — | — | x | — |
+| A1_NOME | Nome | C | 50 | — | — | x | — |
 
-### Indexes
+### Índices
 
-| Order | Composition | Description |
-|-------|-------------|-------------|
-| 1 | A1_FILIAL+A1_COD+A1_LOJA | Customer Code+Store |
-| 2 | A1_FILIAL+A1_NOME | Name |
-...
+| Ordem | Composição | Descrição |
+|-------|-----------|-----------|
+| 1 | A1_FILIAL+A1_COD+A1_LOJA | Codigo + Loja |
+| 2 | A1_FILIAL+A1_NOME+A1_LOJA | Nome + Loja |
 ```
 
 ---
@@ -137,7 +172,8 @@ When presenting results to the user, always:
 
 | Error | Cause | Solution |
 |-------|-------|----------|
+| Query returns empty | Base table `SX3` used instead of `SX3010` | Use company-suffixed table: `SX3010`, `SX3020` |
 | Query returns empty | `character` field has trailing spaces | Use `TRIM()` in comparisons |
-| Data not found | Table has enterprise suffix (sx3**t10**) | Use base table without suffix: `sx3`, `sx2`, `six` |
-| Field not found | Alias with spaces in `x3_arquivo` | Use `TRIM(x3_arquivo) = 'SA1'` |
-| Deleted records returned | Missing soft-delete filter | Always include `d_e_l_e_t_ = ' '` |
+| Field not found | Alias with spaces in `X3_ARQUIVO` | Use `TRIM(X3_ARQUIVO) = 'SA1'` |
+| Deleted records returned | Missing soft-delete filter | Always include `D_E_L_E_T_ = ' '` |
+| Wrong company data | Queried `SX3010` but user is on company 02 | Use `SX3020` for company 02 |

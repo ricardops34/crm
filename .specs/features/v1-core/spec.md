@@ -2,7 +2,7 @@
 
 ## Scope
 
-Implementar o núcleo funcional da V1 do CRM Comercial 360 para operação comercial diária, sem incluir leads, atendimentos ou atualização cadastral.
+Implementar o núcleo funcional da V1 do Visão 360para operação comercial diária, sem incluir leads, atendimentos ou atualização cadastral.
 
 ## Requirements
 

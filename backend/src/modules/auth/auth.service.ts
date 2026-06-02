@@ -40,7 +40,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     const usuario = await this.usuariosRepo.findOne({
       where: { email: dto.email.toLowerCase() },
-      relations: ['perfil', 'perfil.telas', 'usuarioEmpresas'],
+      relations: ['perfil', 'perfil.telas', 'usuarioEmpresas', 'usuarioEmpresas.empresa'],
     });
 
     if (!usuario) {
@@ -56,13 +56,28 @@ export class AuthService {
       throw new UnauthorizedException('Usuário inativo');
     }
 
-    return this.emitirToken(usuario);
+    return this.resolverLogin(usuario, dto.empresa_id);
+  }
+
+  async buscarEmpresasPorLogin(email: string) {
+    const usuario = await this.usuariosRepo.findOne({
+      where: { email: email.toLowerCase() },
+      relations: ['usuarioEmpresas', 'usuarioEmpresas.empresa'],
+    });
+
+    if (!usuario?.ativo) {
+      return { empresas: [] };
+    }
+
+    return {
+      empresas: this.mapearEmpresas(usuario),
+    };
   }
 
   async trocarEmpresa(usuarioId: string, empresaId: number) {
     const usuario = await this.usuariosRepo.findOne({
       where: { id: usuarioId },
-      relations: ['perfil', 'perfil.telas', 'usuarioEmpresas'],
+      relations: ['perfil', 'perfil.telas', 'usuarioEmpresas', 'usuarioEmpresas.empresa'],
     });
 
     if (!usuario) throw new UnauthorizedException();
@@ -78,7 +93,7 @@ export class AuthService {
   async me(payload: JwtPayload) {
     const usuario = await this.usuariosRepo.findOne({
       where: { id: payload.sub },
-      relations: ['perfil', 'perfil.telas', 'usuarioEmpresas'],
+      relations: ['perfil', 'perfil.telas', 'usuarioEmpresas', 'usuarioEmpresas.empresa'],
     });
     if (!usuario) throw new UnauthorizedException();
     return this.emitirToken(usuario, payload.empresa_id);
@@ -101,7 +116,7 @@ export class AuthService {
 
     const full = await this.usuariosRepo.findOne({
       where: { id: usuarioId },
-      relations: ['perfil', 'perfil.telas', 'usuarioEmpresas'],
+      relations: ['perfil', 'perfil.telas', 'usuarioEmpresas', 'usuarioEmpresas.empresa'],
     });
     return this.emitirToken(full!);
   }
@@ -139,10 +154,45 @@ export class AuthService {
     await this.usuariosRepo.save(usuario);
   }
 
+  private async resolverLogin(usuario: Usuario, empresaId?: number) {
+    const empresasDetalhes = this.mapearEmpresas(usuario);
+
+    if (!empresasDetalhes.length) {
+      throw new UnauthorizedException('Usuário sem empresas autorizadas.');
+    }
+
+    if (empresaId !== undefined) {
+      const empresaPermitida = empresasDetalhes.some((empresa) => empresa.id === empresaId);
+      if (!empresaPermitida) {
+        throw new UnauthorizedException('Empresa não autorizada para este usuário.');
+      }
+
+      return this.emitirToken(usuario, empresaId);
+    }
+
+    if (empresasDetalhes.length === 1) {
+      return this.emitirToken(usuario, empresasDetalhes[0].id);
+    }
+
+    return {
+      selecionar_empresa: true,
+      usuario: {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email,
+        perfil_nome: usuario.perfil.nome,
+        primeiro_acesso: usuario.primeiroAcesso,
+      },
+      empresas: empresasDetalhes,
+    };
+  }
+
   private async emitirToken(usuario: Usuario, empresaIdOverride?: number) {
     const perfil = usuario.perfil;
     const empresas = (usuario.usuarioEmpresas ?? []).map((ue) => ue.empresaId);
+    const empresasDetalhes = this.mapearEmpresas(usuario);
     const empresaId = empresaIdOverride ?? empresas[0] ?? 0;
+    const empresaNome = empresasDetalhes.find((empresa) => empresa.id === empresaId)?.nome ?? `Empresa ${empresaId}`;
 
     // Constrói módulos com telas para o JWT
     const modulos = await this.modulosService.buildModulosParaJwt(perfil.nome, perfil.id);
@@ -165,7 +215,9 @@ export class AuthService {
       telas,
       modulos,
       empresa_id: empresaId,
+      empresa_nome: empresaNome,
       empresas,
+      empresas_detalhes: empresasDetalhes,
       primeiro_acesso: usuario.primeiroAcesso,
     };
 
@@ -179,7 +231,9 @@ export class AuthService {
         email: usuario.email,
         perfil_nome: perfil.nome,
         empresas,
+        empresas_detalhes: empresasDetalhes,
         empresa_id: empresaId,
+        empresa_nome: empresaNome,
         primeiro_acesso: usuario.primeiroAcesso,
       },
     };
@@ -224,5 +278,12 @@ export class AuthService {
              <p><a href="${url}/redefinir-senha?token=${token}">${url}/redefinir-senha?token=${token}</a></p>
              <p>O link expira em 2 horas.</p>`,
     });
+  }
+
+  private mapearEmpresas(usuario: Usuario) {
+    return (usuario.usuarioEmpresas ?? []).map((ue) => ({
+      id: ue.empresaId,
+      nome: ue.empresa?.nome ?? `Empresa ${ue.empresaId}`,
+    }));
   }
 }

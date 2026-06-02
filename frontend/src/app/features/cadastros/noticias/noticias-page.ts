@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import {
   PoModule,
   PoModalAction,
+  PoModalComponent,
   PoNotificationService,
   PoTableColumn,
 } from '@po-ui/ng-components';
@@ -60,6 +61,8 @@ interface Noticia {
   `,
 })
 export class NoticiasPageComponent implements OnInit {
+  @ViewChild('modal') modal!: PoModalComponent;
+
   private http = inject(HttpClient);
   private notify = inject(PoNotificationService);
 
@@ -88,7 +91,7 @@ export class NoticiasPageComponent implements OnInit {
   ];
 
   acaoPrimaria: PoModalAction = { label: 'Salvar', action: () => this.salvar() };
-  acaoSecundaria: PoModalAction = { label: 'Cancelar', action: () => {} };
+  acaoSecundaria: PoModalAction = { label: 'Cancelar', action: () => this.modal.close() };
 
   ngOnInit() { this.carregar(); }
 
@@ -103,12 +106,14 @@ export class NoticiasPageComponent implements OnInit {
   abrirNovo() {
     this.modoEdicao = false;
     this.form = { categoria: 'noticia', titulo: '', conteudo: '', data_inicio: '', data_fim: null };
+    this.modal.open();
   }
 
   editar(n: Noticia) {
     this.modoEdicao = true;
     this.idEdicao = n.id;
     this.form = { categoria: n.categoria, titulo: n.titulo, conteudo: '', data_inicio: n.dataInicio, data_fim: n.dataFim };
+    this.modal.open();
   }
 
   salvar() {
@@ -116,7 +121,7 @@ export class NoticiasPageComponent implements OnInit {
       ? this.http.patch(`/api/noticias/${this.idEdicao}`, this.form)
       : this.http.post('/api/noticias', this.form);
     obs.subscribe({
-      next: () => { this.notify.success('Salvo!'); this.carregar(); },
+      next: () => { this.notify.success('Salvo!'); this.modal.close(); this.carregar(); },
       error: (err) => this.notify.error(err?.error?.message ?? 'Erro.'),
     });
   }

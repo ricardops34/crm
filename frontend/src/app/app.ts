@@ -23,13 +23,15 @@ const TEMA_KEY = 'crm_tema';
   template: `
     @if (logado()) {
       <po-toolbar
-        p-title="CRM Comercial 360"
+        p-title="Visão 360"
         [p-profile]="profile()">
       </po-toolbar>
 
       <po-menu
         [p-menus]="menus()"
         [p-filter]="true"
+        [p-collapsed]="true"
+        [p-automatic-toggle]="true"
         p-filter-placeholder="Buscar...">
         <router-outlet></router-outlet>
       </po-menu>
@@ -49,14 +51,16 @@ export class App implements OnInit {
   menus = computed<PoMenuItem[]>(() => {
     const payload = this.auth.payload();
     if (payload?.modulos?.length) {
-      return this.menuService.buildMenuFromModulos(payload.modulos);
+      return this.menuService.buildMenuFromModulos(payload.modulos, () => this.auth.logout());
     }
-    return this.menuService.buildMenu(payload?.telas ?? []);
+    return this.menuService.buildMenu(payload?.telas ?? [], () => this.auth.logout());
   });
 
   profile = computed<PoToolbarProfile>(() => {
     const p = this.auth.payload();
     const empresas = p?.empresas ?? [];
+    const empresasDetalhes =
+      p?.empresas_detalhes ?? empresas.map((empresaId) => ({ id: empresaId, nome: `Empresa ${empresaId}` }));
     const temaAtual = this.getTemaAtual();
 
     const profileActions: any[] = [
@@ -68,12 +72,14 @@ export class App implements OnInit {
       },
     ];
 
-    if (empresas.length > 1) {
-      profileActions.push({
-        label: 'Trocar empresa',
-        icon: 'an an-buildings',
-        action: () => { this.trocarEmpresa(); },
-      });
+    if (empresasDetalhes.length > 1) {
+      for (const empresa of empresasDetalhes.filter((item) => item.id !== p?.empresa_id)) {
+        profileActions.push({
+          label: `Trocar para ${empresa.nome}`,
+          icon: 'an an-buildings',
+          action: () => { this.trocarEmpresa(empresa.id); },
+        });
+      }
     }
 
     profileActions.push({
@@ -85,7 +91,7 @@ export class App implements OnInit {
 
     return {
       title: p?.nome ?? 'Usuário',
-      subtitle: p?.perfil_nome ?? '',
+      subtitle: p ? `${p.empresa_nome} • ${p.perfil_nome}` : '',
       profileActions,
     };
   });
@@ -110,7 +116,11 @@ export class App implements OnInit {
     this.themeService.setTheme(theme, PoThemeTypeEnum.light, PoThemeA11yEnum.AAA, true);
   }
 
-  private trocarEmpresa() {
-    this.router.navigate(['/trocar-empresa']);
+  private trocarEmpresa(empresaId: number) {
+    this.auth.trocarEmpresa(empresaId).subscribe({
+      next: () => {
+        this.router.navigate(['/home']);
+      },
+    });
   }
 }
