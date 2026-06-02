@@ -44,6 +44,7 @@ interface Orcamento {
             <po-button p-label="Enviar" p-kind="primary" p-icon="ph ph-paper-plane-right" (p-click)="enviar()"></po-button>
           }
           <po-button p-label="Copiar" p-icon="ph ph-copy" (p-click)="copiar()"></po-button>
+          <po-button p-label="Download PDF" p-icon="ph ph-file-pdf" (p-click)="downloadPdf()"></po-button>
         </div>
 
         <po-table
@@ -93,11 +94,39 @@ export class OrcamentoFormComponent implements OnInit {
   }
 
   enviar() {
-    const id = this.orcamento()?.id;
-    if (!id) return;
-    this.http.post(`/api/orcamentos/${id}/enviar`, {}).subscribe({
-      next: (o: any) => { this.orcamento.set(o); this.notify.success('Orçamento enviado!'); },
-      error: (err) => this.notify.error(err?.error?.message ?? 'Erro ao enviar.'),
+    const orc = this.orcamento();
+    if (!orc) return;
+    this.http
+      .post(`/api/orcamentos/${orc.id}/enviar`, {}, { responseType: 'blob' })
+      .subscribe({
+        next: (blob: Blob) => {
+          this.notify.success('Orçamento enviado! Baixando PDF...');
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `orcamento-${orc.numeroPortal}.pdf`;
+          a.click();
+          URL.revokeObjectURL(url);
+          this.http.get<Orcamento>(`/api/orcamentos/${orc.id}`).subscribe((o) => this.orcamento.set(o));
+        },
+        error: (err) => this.notify.error(err?.error?.message ?? 'Erro ao enviar.'),
+      });
+  }
+
+  downloadPdf() {
+    const orc = this.orcamento();
+    if (!orc) return;
+    this.http.get(`/api/orcamentos/${orc.id}/pdf`, { responseType: 'blob' }).subscribe({
+      next: (blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `orcamento-${orc.numeroPortal}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+        this.notify.success('PDF baixado!');
+      },
+      error: () => this.notify.error('Erro ao gerar PDF.'),
     });
   }
 

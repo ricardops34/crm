@@ -131,6 +131,20 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/cadastros/parametros/parametros-page').then((m) => m.ParametrosPageComponent),
       },
+      {
+        path: 'cadastros/vendedores',
+        canActivate: [telaGuard],
+        data: { tela: 'vendedores' },
+        loadComponent: () =>
+          import('./features/cadastros/vendedores/vendedores-page').then((m) => m.VendedoresPageComponent),
+      },
+      {
+        path: 'cadastros/noticias',
+        canActivate: [telaGuard],
+        data: { tela: 'noticias' },
+        loadComponent: () =>
+          import('./features/cadastros/noticias/noticias-page').then((m) => m.NoticiasPageComponent),
+      },
     ],
   },
 

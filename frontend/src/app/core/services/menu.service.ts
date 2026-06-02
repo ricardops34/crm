@@ -20,6 +20,8 @@ const TELAS_CATALOGO: TelaCatalogo[] = [
   { codigo: 'usuarios',   nome: 'Usuários',   icone: 'ph ph-user-gear',              rota: '/cadastros/usuarios',  modulo: 'cadastros', ordem: 1 },
   { codigo: 'perfis',     nome: 'Perfis',     icone: 'ph ph-shield-check',           rota: '/cadastros/perfis',    modulo: 'cadastros', ordem: 2 },
   { codigo: 'parametros', nome: 'Parâmetros', icone: 'ph ph-sliders',                rota: '/cadastros/parametros',modulo: 'cadastros', ordem: 3 },
+  { codigo: 'vendedores', nome: 'Vendedores', icone: 'ph ph-identification-card',   rota: '/cadastros/vendedores',modulo: 'cadastros', ordem: 4 },
+  { codigo: 'noticias',   nome: 'Notícias',   icone: 'ph ph-newspaper',             rota: '/cadastros/noticias',  modulo: 'cadastros', ordem: 5 },
 ];
 
 @Injectable({ providedIn: 'root' })

@@ -11,6 +11,7 @@ import { Tela } from '../entities/tela.entity';
 import { Usuario } from '../entities/usuario.entity';
 import { UsuarioEmpresa } from '../entities/usuario-empresa.entity';
 import { Parametro } from '../entities/parametro.entity';
+import { Noticia } from '../entities/noticia.entity';
 
 const ds = new DataSource({
   type: 'postgres',
@@ -19,7 +20,7 @@ const ds = new DataSource({
   username: process.env.DB_USERNAME ?? 'crm_user',
   password: process.env.DB_PASSWORD ?? 'crm_pass',
   database: process.env.DB_DATABASE ?? 'crm_db',
-  entities: [Empresa, Perfil, Tela, Usuario, UsuarioEmpresa, Parametro],
+  entities: [Empresa, Perfil, Tela, Usuario, UsuarioEmpresa, Parametro, Noticia],
   synchronize: true,
 });
 
@@ -33,6 +34,8 @@ const TELAS = [
   { codigo: 'usuarios',          nome: 'Usuários',       icone: 'ph ph-user-gear',                   rota: '/cadastros/usuarios',         modulo: 'cadastros', ordem: 1 },
   { codigo: 'perfis',            nome: 'Perfis',         icone: 'ph ph-shield-check',                rota: '/cadastros/perfis',           modulo: 'cadastros', ordem: 2 },
   { codigo: 'parametros',        nome: 'Parâmetros',     icone: 'ph ph-sliders',                     rota: '/cadastros/parametros',       modulo: 'cadastros', ordem: 3 },
+  { codigo: 'vendedores',        nome: 'Vendedores',     icone: 'ph ph-identification-card',         rota: '/cadastros/vendedores',       modulo: 'cadastros', ordem: 4 },
+  { codigo: 'noticias',          nome: 'Notícias',       icone: 'ph ph-newspaper',                   rota: '/cadastros/noticias',         modulo: 'cadastros', ordem: 5 },
 ];
 
 const PERFIS_SEED: Array<{ nome: string; descricao: string; telas: string[] }> = [
@@ -64,7 +67,7 @@ const PERFIS_SEED: Array<{ nome: string; descricao: string; telas: string[] }> =
   {
     nome: 'Administrativo',
     descricao: 'Perfil Administrativo',
-    telas: ['home', 'clientes', 'orcamentos', 'usuarios', 'perfis', 'parametros'],
+    telas: ['home', 'clientes', 'orcamentos', 'usuarios', 'perfis', 'parametros', 'vendedores', 'noticias'],
   },
   {
     nome: 'Financeiro',
@@ -165,6 +168,25 @@ async function seed() {
     await paramRepo.upsert(p, ['empresaId', 'grupo', 'chave']);
   }
   console.log('✓ Parâmetros');
+
+  // Notícia de boas-vindas
+  const noticiaRepo = ds.getRepository(Noticia);
+  const jaTemNoticia = await noticiaRepo.count();
+  if (jaTemNoticia === 0) {
+    const hoje = new Date().toISOString().split('T')[0];
+    await noticiaRepo.save(
+      noticiaRepo.create({
+        empresaId: null,
+        categoria: 'aviso',
+        titulo: 'Bem-vindo ao CRM Comercial 360!',
+        conteudo: 'O sistema está configurado e pronto para uso. Configure os vendedores em Cadastros → Vendedores.',
+        dataInicio: hoje,
+        dataFim: null,
+        autorId: admin!.id,
+      }),
+    );
+    console.log('✓ Notícia de boas-vindas');
+  }
 
   await ds.destroy();
   console.log('\nSeed concluído com sucesso!');

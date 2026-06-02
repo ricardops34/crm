@@ -13,6 +13,9 @@ import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { McvModule } from './modules/mcv/mcv.module';
 import { ClientesModule } from './modules/clientes/clientes.module';
 import { OrcamentosModule } from './modules/orcamentos/orcamentos.module';
+import { VendedoresModule } from './modules/vendedores/vendedores.module';
+import { NoticiasModule } from './modules/noticias/noticias.module';
+import { HomeModule } from './modules/home/home.module';
 
 import { Empresa } from './entities/empresa.entity';
 import { Usuario } from './entities/usuario.entity';
@@ -29,12 +32,15 @@ import { Produto } from './entities/produto.entity';
 import { TituloFinanceiro } from './entities/titulo-financeiro.entity';
 import { NotaFiscal } from './entities/nota-fiscal.entity';
 import { NotaFiscalItem } from './entities/nota-fiscal-item.entity';
+import { Noticia } from './entities/noticia.entity';
+import { LogEnvioOrcamento } from './entities/log-envio-orcamento.entity';
 
 const ENTITIES = [
   Empresa, Usuario, UsuarioEmpresa, Perfil, Tela, Parametro,
   Cliente, Vendedor, CarteiraCliente,
   Orcamento, OrcamentoItem, Produto,
   TituloFinanceiro, NotaFiscal, NotaFiscalItem,
+  Noticia, LogEnvioOrcamento,
 ];
 
 @Module({
@@ -79,6 +85,9 @@ const ENTITIES = [
     McvModule,
     ClientesModule,
     OrcamentosModule,
+    VendedoresModule,
+    NoticiasModule,
+    HomeModule,
   ],
 })
 export class AppModule {}
