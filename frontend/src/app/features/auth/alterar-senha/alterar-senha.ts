@@ -1,24 +1,12 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import {
-  PoButtonComponent,
-  PoFieldContainerComponent,
-  PoInputComponent,
-  PoNotificationService,
-  PoPageDefaultComponent,
-} from '@po-ui/ng-components';
+import { PoModule, PoNotificationService } from '@po-ui/ng-components';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-alterar-senha',
-  imports: [
-    FormsModule,
-    PoPageDefaultComponent,
-    PoInputComponent,
-    PoButtonComponent,
-    PoFieldContainerComponent,
-  ],
+  imports: [FormsModule, PoModule],
   template: `
     <po-page-default p-title="Alterar Senha">
       <div class="po-row po-mt-2">
@@ -52,7 +40,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
           <po-button
             p-label="Salvar"
-            p-type="primary"
+            p-kind="primary"
             [p-loading]="loading()"
             [p-disabled]="!podeEnviar()"
             (p-click)="salvar()">

@@ -1,15 +1,11 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-  PoContainerComponent,
-  PoInfoComponent,
-  PoPageDefaultComponent,
-} from '@po-ui/ng-components';
+import { PoModule } from '@po-ui/ng-components';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
-  imports: [PoPageDefaultComponent, PoContainerComponent, PoInfoComponent, RouterLink],
+  imports: [PoModule, RouterLink],
   template: `
     <po-page-default [p-title]="titulo()">
       <po-container>

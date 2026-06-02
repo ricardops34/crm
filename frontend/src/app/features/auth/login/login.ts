@@ -1,15 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { PoPageLoginComponent, PoPageLoginLiterals } from '@po-ui/ng-templates';
+import { PoTemplatesModule } from '@po-ui/ng-templates';
+import { PoPageLoginLiterals } from '@po-ui/ng-templates';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [PoPageLoginComponent],
+  imports: [PoTemplatesModule],
   template: `
     <po-page-login
       p-product-name="CRM Comercial 360"
       p-logo="/assets/logo-rcg.png"
+      p-recovery="/esqueci-senha"
       [p-literals]="literals"
       [p-loading]="loading()"
       (p-login-submit)="onLogin($event)">
@@ -26,7 +28,6 @@ export class LoginComponent {
     loginPlaceholder: 'seu@email.com.br',
     passwordPlaceholder: 'Senha',
     forgotPassword: 'Esqueci minha senha',
-    forgotPasswordRoute: '/esqueci-senha',
   };
 
   onLogin(event: { login: string; password: string }) {

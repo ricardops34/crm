@@ -1,16 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import {
-  PoButtonComponent,
-  PoButtonGroupComponent,
-  PoButtonGroupItem,
-  PoPageDefaultComponent,
-  PoTableAction,
-  PoTableColumn,
-  PoTableComponent,
-  PoTagComponent,
-} from '@po-ui/ng-components';
+import { PoModule, PoButtonGroupItem, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 
 interface ClienteMcv {
   id: string;
@@ -29,10 +20,7 @@ interface ClienteMcv {
 
 @Component({
   selector: 'app-mcv',
-  imports: [
-    PoPageDefaultComponent, PoTableComponent, PoButtonComponent,
-    PoButtonGroupComponent, PoTagComponent,
-  ],
+  imports: [PoModule],
   template: `
     <po-page-default p-title="MCV — Minha Carteira de Vendas">
       <!-- Filtros rápidos -->
@@ -40,7 +28,7 @@ interface ClienteMcv {
         @for (f of filtrosRapidos; track f.label) {
           <po-button
             [p-label]="f.label"
-            [p-type]="filtroAtivo === f.valor ? 'primary' : 'default'"
+            [p-kind]="filtroAtivo === f.valor ? 'primary' : 'secondary'"
             (p-click)="aplicarFiltro(f.valor)">
           </po-button>
         }
@@ -80,8 +68,8 @@ export class McvComponent implements OnInit {
     {
       property: 'bloqueado', label: 'Situação', type: 'icon',
       icons: [
-        { value: false, icon: 'ph ph-lock-open', color: 'color-10', tooltip: 'Ativo' },
-        { value: true,  icon: 'ph ph-lock',      color: 'color-07', tooltip: 'Bloqueado' },
+        { value: 'false', icon: 'ph ph-lock-open', color: 'color-10', tooltip: 'Ativo' },
+        { value: 'true',  icon: 'ph ph-lock',      color: 'color-07', tooltip: 'Bloqueado' },
       ],
     },
     { property: 'codErp',          label: 'Código',      sortable: true },
@@ -95,7 +83,7 @@ export class McvComponent implements OnInit {
     {
       property: 'temComodato', label: 'Comodato', type: 'icon',
       icons: [
-        { value: true, icon: 'ph ph-package', color: 'color-01', tooltip: 'Possui comodato' },
+        { value: 'true', icon: 'ph ph-package', color: 'color-01', tooltip: 'Possui comodato' },
       ],
     },
   ];

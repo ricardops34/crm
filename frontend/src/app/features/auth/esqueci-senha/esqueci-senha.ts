@@ -1,17 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  PoButtonComponent,
-  PoInputComponent,
-  PoNotificationService,
-  PoPageDefaultComponent,
-} from '@po-ui/ng-components';
+import { PoModule, PoNotificationService } from '@po-ui/ng-components';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-esqueci-senha',
-  imports: [FormsModule, PoPageDefaultComponent, PoInputComponent, PoButtonComponent, RouterLink],
+  imports: [FormsModule, PoModule, RouterLink],
   template: `
     <po-page-default p-title="Esqueci minha senha">
       <div class="po-row po-mt-2">
@@ -28,7 +23,7 @@ import { AuthService } from '../../../core/services/auth.service';
             </po-input>
             <po-button
               p-label="Enviar"
-              p-type="primary"
+              p-kind="primary"
               [p-loading]="loading()"
               [p-disabled]="!email"
               (p-click)="enviar()">

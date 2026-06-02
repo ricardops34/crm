@@ -1,17 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import {
-  PoContainerComponent,
-  PoInfoComponent,
-  PoLoadingOverlayComponent,
-  PoPageDefaultComponent,
-  PoTableColumn,
-  PoTableComponent,
-  PoTabComponent,
-  PoTabsComponent,
-  PoTagComponent,
-} from '@po-ui/ng-components';
+import { PoModule, PoTableColumn } from '@po-ui/ng-components';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
 interface Cliente {
@@ -23,11 +13,7 @@ interface Cliente {
 
 @Component({
   selector: 'app-cliente-360',
-  imports: [
-    PoPageDefaultComponent, PoTabsComponent, PoTabComponent,
-    PoTableComponent, PoInfoComponent, PoContainerComponent, PoTagComponent,
-    PoLoadingOverlayComponent, CurrencyPipe, DatePipe,
-  ],
+  imports: [PoModule, CurrencyPipe, DatePipe],
   template: `
     <po-loading-overlay [p-screen-lock]="loading()"></po-loading-overlay>
 
@@ -35,7 +21,7 @@ interface Cliente {
       [p-title]="cliente()?.razaoSocial ?? 'Cliente 360'"
       [p-breadcrumb]="{ items: [{ label: 'MCV', link: '/mcv' }, { label: 'Cliente 360' }] }">
 
-      <po-tabs [p-small]="false">
+      <po-tabs>
         <!-- Aba Cadastro -->
         <po-tab p-label="Cadastro / Resumo" [p-active]="abaAtiva === 'cadastro'">
           @if (cliente(); as c) {
@@ -51,10 +37,10 @@ interface Cliente {
               </div>
               <hr class="po-divider po-my-3">
               <div class="po-row">
-                <po-info class="po-col-3" p-label="Última Compra" [p-value]="c.ultimaCompra | date:'dd/MM/yyyy'"></po-info>
+                <po-info class="po-col-3" p-label="Última Compra" [p-value]="(c.ultimaCompra | date:'dd/MM/yyyy') ?? ''"></po-info>
                 <po-info class="po-col-3" p-label="Dias sem comprar" [p-value]="c.diasSemComprar?.toString() ?? '—'"></po-info>
-                <po-info class="po-col-3" p-label="Limite de Crédito" [p-value]="c.limiteCredito | currency:'BRL'"></po-info>
-                <po-info class="po-col-3" p-label="Títulos em Aberto" [p-value]="c.titulosAberto | currency:'BRL'"></po-info>
+                <po-info class="po-col-3" p-label="Limite de Crédito" [p-value]="(c.limiteCredito | currency:'BRL') ?? ''"></po-info>
+                <po-info class="po-col-3" p-label="Títulos em Aberto" [p-value]="(c.titulosAberto | currency:'BRL') ?? ''"></po-info>
               </div>
             </po-container>
           }

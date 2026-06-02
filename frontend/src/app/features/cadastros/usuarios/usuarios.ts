@@ -1,17 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import {
-  PoButtonComponent,
-  PoModalComponent,
-  PoModalAction,
-  PoNotificationService,
-  PoPageDefaultComponent,
-  PoTableColumn,
-  PoTableComponent,
-  PoInputComponent,
-  PoSelectComponent,
-} from '@po-ui/ng-components';
+import { PoModule, PoModalAction, PoNotificationService, PoTableColumn } from '@po-ui/ng-components';
 
 interface Usuario {
   id: string;
@@ -26,10 +16,7 @@ interface Perfil { id: string; nome: string; }
 
 @Component({
   selector: 'app-usuarios',
-  imports: [
-    PoPageDefaultComponent, PoTableComponent, PoButtonComponent,
-    PoModalComponent, FormsModule, PoInputComponent, PoSelectComponent,
-  ],
+  imports: [PoModule, FormsModule],
   template: `
     <po-page-default
       p-title="Usuários"
@@ -38,7 +25,7 @@ interface Perfil { id: string; nome: string; }
       <po-button
         p-label="Novo usuário"
         p-icon="ph ph-plus"
-        p-type="primary"
+        p-kind="primary"
         (p-click)="abrirNovo()">
       </po-button>
 
@@ -56,10 +43,11 @@ interface Perfil { id: string; nome: string; }
       [p-primary-action]="acaoPrimaria"
       [p-secondary-action]="acaoSecundaria">
       <po-input name="nome" [(ngModel)]="form.nome" p-label="Nome completo" p-required></po-input>
-      <po-input name="email" [(ngModel)]="form.email" p-label="E-mail" p-required [p-disabled]="modoEdicao"></po-input>
+      <po-input name="email" [(ngModel)]="form.email" p-label="E-mail" p-required [p-disabled]="$any(modoEdicao)"></po-input>
       <po-select
         name="perfil"
-        [(ngModel)]="form.perfil_id"
+        [ngModel]="form.perfil_id"
+        (ngModelChange)="form.perfil_id = $event"
         p-label="Perfil"
         [p-options]="opcooesPerfis()">
       </po-select>

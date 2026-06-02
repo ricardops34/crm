@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { PoPageDefaultComponent } from '@po-ui/ng-components';
+import { PoModule } from '@po-ui/ng-components';
 
 @Component({
   selector: 'app-clientes-list',
-  imports: [PoPageDefaultComponent],
+  imports: [PoModule],
   template: `
     <po-page-default p-title="Clientes">
       <p class="po-mt-4 po-text-center">

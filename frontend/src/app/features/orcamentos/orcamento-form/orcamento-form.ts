@@ -2,15 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import {
-  PoButtonComponent,
-  PoInputComponent,
-  PoNotificationService,
-  PoPageDefaultComponent,
-  PoTableColumn,
-  PoTableComponent,
-  PoTagComponent,
-} from '@po-ui/ng-components';
+import { UpperCasePipe, CurrencyPipe } from '@angular/common';
+import { PoModule, PoNotificationService, PoTableColumn } from '@po-ui/ng-components';
 
 interface OrcItem {
   id?: string;
@@ -35,7 +28,7 @@ interface Orcamento {
 
 @Component({
   selector: 'app-orcamento-form',
-  imports: [PoPageDefaultComponent, PoTableComponent, PoButtonComponent, PoInputComponent, FormsModule, PoTagComponent],
+  imports: [PoModule, FormsModule, UpperCasePipe, CurrencyPipe],
   template: `
     <po-page-default
       [p-title]="titulo()"
@@ -48,7 +41,7 @@ interface Orcamento {
           <span>Valor: <strong>{{ orc.valorTotal | currency:'BRL' }}</strong></span>
 
           @if (orc.status === 'rascunho') {
-            <po-button p-label="Enviar" p-type="primary" p-icon="ph ph-paper-plane-right" (p-click)="enviar()"></po-button>
+            <po-button p-label="Enviar" p-kind="primary" p-icon="ph ph-paper-plane-right" (p-click)="enviar()"></po-button>
           }
           <po-button p-label="Copiar" p-icon="ph ph-copy" (p-click)="copiar()"></po-button>
         </div>
@@ -84,7 +77,7 @@ export class OrcamentoFormComponent implements OnInit {
     { property: 'valorTotal', label: 'Total', type: 'currency', format: 'BRL' },
     {
       property: 'semEstoque', label: '', type: 'icon',
-      icons: [{ value: true, icon: 'ph ph-warning', color: 'color-08', tooltip: 'Sem estoque' }],
+      icons: [{ value: 'true', icon: 'ph ph-warning', color: 'color-08', tooltip: 'Sem estoque' }],
     },
   ];
 

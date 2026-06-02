@@ -1,17 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import {
-  PoButtonComponent,
-  PoInputComponent,
-  PoNotificationService,
-  PoPageDefaultComponent,
-} from '@po-ui/ng-components';
+import { PoModule, PoNotificationService } from '@po-ui/ng-components';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-redefinir-senha',
-  imports: [FormsModule, PoPageDefaultComponent, PoInputComponent, PoButtonComponent, RouterLink],
+  imports: [FormsModule, PoModule, RouterLink],
   template: `
     <po-page-default p-title="Redefinir senha">
       <div class="po-row po-mt-2">
@@ -21,7 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
             <po-input name="conf" type="password" [(ngModel)]="confirmar"  p-label="Confirmar senha" class="po-mb-2"></po-input>
             <po-button
               p-label="Redefinir senha"
-              p-type="primary"
+              p-kind="primary"
               [p-loading]="loading()"
               [p-disabled]="novaSenha.length < 8 || novaSenha !== confirmar"
               (p-click)="redefinir()">

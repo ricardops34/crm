@@ -1,14 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import {
-  PoButtonComponent,
-  PoPageDefaultComponent,
-  PoTableAction,
-  PoTableColumn,
-  PoTableComponent,
-} from '@po-ui/ng-components';
 import { FormsModule } from '@angular/forms';
+import { PoModule, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 
 interface Orcamento {
   id: string;
@@ -23,17 +17,19 @@ interface Orcamento {
 
 @Component({
   selector: 'app-orcamentos-list',
-  imports: [PoPageDefaultComponent, PoTableComponent, PoButtonComponent, FormsModule],
+  imports: [PoModule, FormsModule],
   template: `
     <po-page-default p-title="Orçamentos">
       <div class="po-d-flex po-mb-3" style="gap:8px; align-items:flex-end;">
-        <select name="status" [(ngModel)]="filtroStatus" (change)="carregar()" class="po-select-input" style="width: 220px; padding: 8px; border: 1px solid var(--color-neutral-dark-20); border-radius: 4px;">
-          <option value="">Todos</option>
-          @for (opt of statusOpcoes.slice(1); track opt.value) {
-            <option [value]="opt.value">{{ opt.label }}</option>
-          }
-        </select>
-        <po-button p-label="Novo orçamento" p-type="primary" p-icon="ph ph-plus" (p-click)="novo()"></po-button>
+        <po-select
+          name="status"
+          [ngModel]="filtroStatus"
+          (ngModelChange)="filtroStatus = $event; carregar()"
+          p-label="Status"
+          [p-options]="statusOpcoes"
+          style="min-width: 220px">
+        </po-select>
+        <po-button p-label="Novo orçamento" p-kind="primary" p-icon="ph ph-plus" (p-click)="novo()"></po-button>
       </div>
 
       <po-table

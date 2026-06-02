@@ -1,27 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import {
-  PoButtonComponent,
-  PoCheckboxGroupComponent,
-  PoModalComponent,
-  PoModalAction,
-  PoNotificationService,
-  PoPageDefaultComponent,
-  PoTableColumn,
-  PoTableComponent,
-  PoCheckboxGroupOption,
-} from '@po-ui/ng-components';
+import { PoModule, PoModalAction, PoNotificationService, PoTableColumn, PoCheckboxGroupOption } from '@po-ui/ng-components';
 
 interface Tela { id: string; codigo: string; nome: string; modulo: string; }
 interface Perfil { id: string; nome: string; descricao: string; versao: number; ativo: boolean; telas?: Tela[]; }
 
 @Component({
   selector: 'app-perfis-page',
-  imports: [
-    PoPageDefaultComponent, PoTableComponent, PoButtonComponent,
-    PoModalComponent, FormsModule, PoCheckboxGroupComponent,
-  ],
+  imports: [PoModule, FormsModule],
   template: `
     <po-page-default
       p-title="Perfis"
@@ -51,7 +38,8 @@ interface Perfil { id: string; nome: string; descricao: string; versao: number; 
               <p class="po-text-color-neutral-dark-60"><strong>{{ modulo.nome }}</strong></p>
               <po-checkbox-group
                 [p-options]="modulo.opcoes"
-                [(ngModel)]="telasSelecionadas"
+                [ngModel]="telasSelecionadas"
+                (ngModelChange)="telasSelecionadas = $event"
                 [name]="'telas_' + modulo.nome">
               </po-checkbox-group>
             </div>

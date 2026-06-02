@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PoPageDefaultComponent } from '@po-ui/ng-components';
+import { PoModule } from '@po-ui/ng-components';
 
 @Component({
   selector: 'app-sem-acesso',
-  imports: [PoPageDefaultComponent, RouterLink],
+  imports: [PoModule, RouterLink],
   template: `
     <po-page-default p-title="Sem acesso">
       <div class="po-row po-mt-4 po-text-center">

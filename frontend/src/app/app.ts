@@ -1,9 +1,8 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import {
-  PoMenuComponent,
+  PoModule,
   PoMenuItem,
-  PoToolbarComponent,
   PoToolbarProfile,
   PoThemeService,
   PoThemeTypeEnum,
@@ -16,7 +15,7 @@ import { MenuService } from './core/services/menu.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, PoMenuComponent, PoToolbarComponent],
+  imports: [RouterOutlet, PoModule],
   template: `
     @if (logado()) {
       <po-toolbar
@@ -26,7 +25,7 @@ import { MenuService } from './core/services/menu.service';
 
       <po-menu
         [p-menus]="menus()"
-        p-filter="true"
+        [p-filter]="true"
         p-filter-placeholder="Buscar...">
         <router-outlet></router-outlet>
       </po-menu>
@@ -52,14 +51,14 @@ export class App implements OnInit {
     const p = this.auth.payload();
     const empresas = p?.empresas ?? [];
     const profileActions = [
-      { label: 'Meu perfil', icon: 'ph ph-user', action: () => this.router.navigate(['/perfil']) },
+      { label: 'Meu perfil', icon: 'ph ph-user', action: () => { this.router.navigate(['/perfil']); } },
     ];
 
     if (empresas.length > 1) {
       profileActions.push({
         label: 'Trocar empresa',
         icon: 'ph ph-buildings',
-        action: () => this.trocarEmpresa(),
+        action: () => { this.trocarEmpresa(); },
       });
     }
 
@@ -67,7 +66,7 @@ export class App implements OnInit {
       label: 'Sair',
       icon: 'ph ph-sign-out',
       type: 'danger',
-      action: () => this.auth.logout(),
+      action: () => { this.auth.logout(); },
     } as any);
 
     return {

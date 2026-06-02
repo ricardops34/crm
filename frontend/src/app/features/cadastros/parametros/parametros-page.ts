@@ -1,13 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import {
-  PoButtonComponent,
-  PoInputComponent,
-  PoNotificationService,
-  PoPageDefaultComponent,
-  PoSwitchComponent,
-} from '@po-ui/ng-components';
+import { UpperCasePipe } from '@angular/common';
+import { PoModule, PoNotificationService } from '@po-ui/ng-components';
 
 interface Parametro {
   id: number;
@@ -21,7 +16,7 @@ interface Parametro {
 
 @Component({
   selector: 'app-parametros-page',
-  imports: [PoPageDefaultComponent, FormsModule, PoInputComponent, PoButtonComponent, PoSwitchComponent],
+  imports: [PoModule, FormsModule, UpperCasePipe],
   template: `
     <po-page-default
       p-title="Parâmetros do Sistema"
@@ -44,7 +39,6 @@ interface Parametro {
                     [name]="p.chave"
                     [(ngModel)]="valoresForm[p.chave]"
                     [p-label]="p.descricao ?? p.chave"
-                    [p-type]="p.tipo === 'password' ? 'password' : 'text'"
                     [p-placeholder]="p.sensivel ? '••••••••' : ''">
                   </po-input>
                 }
@@ -54,7 +48,7 @@ interface Parametro {
 
           <po-button
             [p-label]="'Salvar ' + grupo.nome"
-            p-type="primary"
+            p-kind="primary"
             [p-loading]="salvando()"
             (p-click)="salvarGrupo(grupo.nome)">
           </po-button>
