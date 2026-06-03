@@ -27,6 +27,7 @@ export class MenuService {
   private buildLogoutItem(onLogout?: () => void): PoMenuItem {
     return {
       label: 'Sair',
+      shortLabel: 'Sair',
       icon: 'an an-sign-out',
       type: 'danger',
       action: onLogout,
@@ -50,12 +51,14 @@ export class MenuService {
       if (telas.length === 1) {
         menus.push({
           label: modulo.nome,
+          shortLabel: modulo.nome.substring(0, 12),
           icon: moduloIcone,
           link: telas[0].rota,
         });
       } else {
         menus.push({
           label: modulo.nome,
+          shortLabel: modulo.nome.substring(0, 12),
           icon: moduloIcone,
           subItems: telas.map((t) => ({
             label: t.nome,
@@ -87,7 +90,7 @@ export class MenuService {
     ];
 
     const permitidas = catalog.filter((t) => telas.includes(t.codigo));
-    const toItem = (t: (typeof catalog)[number]) => ({ label: t.nome, icon: t.icone, link: t.rota } as PoMenuItem);
+    const toItem = (t: (typeof catalog)[number]) => ({ label: t.nome, shortLabel: t.nome.substring(0, 12), icon: t.icone, link: t.rota } as PoMenuItem);
 
     const geral = permitidas.filter((t) => t.cat === 'geral').map(toItem);
     const vendas = permitidas.filter((t) => t.cat === 'vendas').map(toItem);
@@ -96,10 +99,10 @@ export class MenuService {
     const cfg = permitidas.filter((t) => t.cat === 'cfg').map(toItem);
 
     const menus: PoMenuItem[] = [...geral];
-    if (vendas.length) menus.push({ label: 'Vendas', icon: 'an an-storefront', subItems: vendas });
-    if (sup.length) menus.push({ label: 'Supervisão', icon: 'an an-binoculars', subItems: sup });
-    if (cad.length) menus.push({ label: 'Cadastros', icon: 'an an-folder-open', subItems: cad });
-    if (cfg.length) menus.push({ label: 'Configurações', icon: 'an an-gear-six', subItems: cfg });
+    if (vendas.length) menus.push({ label: 'Vendas', shortLabel: 'Vendas', icon: 'an an-storefront', subItems: vendas });
+    if (sup.length) menus.push({ label: 'Supervisão', shortLabel: 'Supervisão', icon: 'an an-binoculars', subItems: sup });
+    if (cad.length) menus.push({ label: 'Cadastros', shortLabel: 'Cadastros', icon: 'an an-folder-open', subItems: cad });
+    if (cfg.length) menus.push({ label: 'Configurações', shortLabel: 'Config', icon: 'an an-gear-six', subItems: cfg });
     menus.push(this.buildLogoutItem(onLogout));
 
     return menus;

@@ -1,4 +1,4 @@
-# Visão 360
+# ORCA 360
 
 CRM comercial multiempresa para `RCG` e `CBA`, com frontend em `Angular + PO-UI`, backend REST em `NestJS`, banco `PostgreSQL`, cache `Redis` e integração com `Protheus`.
 
